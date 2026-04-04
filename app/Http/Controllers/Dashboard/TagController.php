@@ -3,64 +3,54 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\TagRequest;
 use App\Models\Tag;
-use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class TagController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $tags = Tag::paginate(10);
+
+        return inertia('dashboard/tag/Index', compact('tags'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        $tag = new Tag;
+
+        return inertia('dashboard/tag/Save', compact('tag'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(TagRequest $request)
     {
-        //
+        Tag::create($request->validated());
+
+        Inertia::flash('message', 'Tag created successfully.');
+
+        return to_route('tag.index');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Tag $tag)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Tag $tag)
     {
-        //
+        return inertia('dashboard/tag/Save', compact('tag'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Tag $tag)
+    public function update(TagRequest $request, Tag $tag)
     {
-        //
+        $tag->update($request->validated());
+
+        Inertia::flash('message', 'Tag updated successfully.');
+
+        return redirect()->route('tag.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Tag $tag)
     {
-        //
+        $tag->delete();
+        Inertia::flash('message', 'Tag deleted successfully.');
+
+        return to_route('tag.index');
     }
 }

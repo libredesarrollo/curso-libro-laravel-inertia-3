@@ -19,7 +19,9 @@ import {
 import { dashboard } from '@/routes';
 import type { NavItem } from '@/types';
 
-import { index } from '@/actions/App/Http/Controllers/Dashboard/CategoryController'
+import { index as CategoryIndex } from '@/actions/App/Http/Controllers/Dashboard/CategoryController'
+import { index as PostIndex } from '@/actions/App/Http/Controllers/Dashboard/PostController'
+import { index as TagIndex } from '@/actions/App/Http/Controllers/Dashboard/TagController'
 
 const page = usePage();
 
@@ -35,7 +37,17 @@ const mainNavItems = computed<NavItem[]>(() => [
     },
     {
         title: 'Category',
-        href: index().url,
+        href: CategoryIndex().url,
+        icon: LayoutGrid,
+    },
+    {
+        title: 'Post',
+        href: PostIndex().url,
+        icon: LayoutGrid,
+    },
+    {
+        title: 'Tag',
+        href: TagIndex().url,
         icon: LayoutGrid,
     },
 ]);
