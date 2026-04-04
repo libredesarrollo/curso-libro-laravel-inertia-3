@@ -7,6 +7,15 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class CategoryRequest extends FormRequest
 {
+
+    function prepareForValidation()
+    {
+        if(str($this->slug)->trim() == ''){
+            $this->merge(['slug' => str($this->title)->slug()]);
+        }
+        return parent::prepareForValidation();
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -24,7 +33,7 @@ class CategoryRequest extends FormRequest
     {
         return [
             "title" => 'required|min:3|max:255',
-            "slug" => 'required|min:3|max:255|unique:categories' 
+            "slug" => 'required|min:3|max:255|unique:categories,slug,'.$this->route("category")?->id
         ];
     }
 }

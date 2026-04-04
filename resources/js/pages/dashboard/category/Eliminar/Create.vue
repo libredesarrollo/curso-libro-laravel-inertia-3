@@ -17,7 +17,7 @@
                 <InputError :message="errors.title" />
 
                 <Label for="name">Slug</Label>
-                <Input id="title" name="slug" v-model="form.slug" :default-value="form.slug" required />
+                <Input id="title" name="slug" v-model="form.slug" :default-value="form.slug" />
                 <InputError :message="errors.slug" />
             </div>
 

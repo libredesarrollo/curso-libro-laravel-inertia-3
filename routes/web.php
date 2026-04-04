@@ -14,6 +14,7 @@ Route::inertia('/', 'Welcome', [
 Route::prefix('{current_team}')
     ->middleware(['auth', 'verified', EnsureTeamMembership::class])
     ->group(function () {
+        // sleep(2);
         Route::inertia('dashboard', 'Dashboard')->name('dashboard');
     });
 
