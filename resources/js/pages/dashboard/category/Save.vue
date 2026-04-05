@@ -1,5 +1,10 @@
 <script setup lang="ts">
 import { Head, Form, Link } from '@inertiajs/vue3';
+import { ArrowLeft, Save } from 'lucide-vue-next';
+import {
+    update,
+    store,
+} from '@/actions/App/Http/Controllers/Dashboard/CategoryController';
 import Heading from '@/components/Heading.vue';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
@@ -9,11 +14,6 @@ import {
     CardFooter,
     CardHeader,
 } from '@/components/ui/card';
-import { ArrowLeft, Save } from 'lucide-vue-next';
-import {
-    update,
-    store,
-} from '@/actions/App/Http/Controllers/Dashboard/CategoryController';
 
 defineProps<{
     category: {

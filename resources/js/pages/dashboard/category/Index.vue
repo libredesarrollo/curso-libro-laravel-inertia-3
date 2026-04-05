@@ -1,12 +1,18 @@
 <script setup lang="ts">
 import { Head, router, usePage } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
+import { MoreHorizontal, Plus, Pencil, Trash2 } from 'lucide-vue-next';
+import { ref } from 'vue';
+import {
+    create,
+    edit,
+    destroy,
+} from '@/actions/App/Http/Controllers/Dashboard/CategoryController';
 import Heading from '@/components/Heading.vue';
 import Pagination from '@/components/shared/Pagination.vue';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 
-import { ref } from 'vue';
 
 import {
     DropdownMenu,
@@ -15,12 +21,6 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { MoreHorizontal, Plus, Pencil, Trash2 } from 'lucide-vue-next';
-import {
-    create,
-    edit,
-    destroy,
-} from '@/actions/App/Http/Controllers/Dashboard/CategoryController';
 
 defineProps<{
     categories: {
@@ -31,8 +31,8 @@ defineProps<{
 
 const page = usePage();
 
-let confirmDeleteActive = ref(false);
-let deleteCategoryRow = ref<number | string>(""); // Guardamos el ID aquí
+const confirmDeleteActive = ref(false);
+const deleteCategoryRow = ref<number | string>(""); // Guardamos el ID aquí
 
 const deleteCategory = () => {
     // 1. Usamos .value para obtener el ID guardado

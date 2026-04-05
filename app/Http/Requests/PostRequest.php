@@ -34,6 +34,7 @@ class PostRequest extends FormRequest
             'posted' => 'required|in:yes,not',
             'type' => 'required|in:advert,post,course,movie',
             'category_id' => 'required|exists:categories,id',
+            'image' => 'nullable|mimes:jpg,jpeg,png,gif|max:10240'
         ];
     }
 }

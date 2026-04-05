@@ -27,6 +27,8 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('category', CategoryController::class);
         Route::resource('post', PostController::class);
         Route::resource('tag', TagController::class);
+        Route::post('post/{post}/upload', [PostController::class,'upload'])->name('post.upload');
+        Route::delete('post/{post}/image/delete', [App\Http\Controllers\Dashboard\PostController::class, 'imageDelete'])->name('post.image-delete');
     }); 
     
 });

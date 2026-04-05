@@ -1,18 +1,6 @@
 <script setup lang="ts">
 import { Head, Form, usePage } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
-import Heading from '@/components/Heading.vue';
-import Pagination from '@/components/shared/Pagination.vue';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import {
     MoreHorizontal,
     Plus,
@@ -25,6 +13,18 @@ import {
     edit,
     destroy,
 } from '@/actions/App/Http/Controllers/Dashboard/TagController';
+import Heading from '@/components/Heading.vue';
+import Pagination from '@/components/shared/Pagination.vue';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 defineProps<{
     tags: {

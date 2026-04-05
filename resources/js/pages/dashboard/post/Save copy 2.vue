@@ -14,13 +14,12 @@ import {
     Undo,
     Heading as CHeading,
 } from 'ckeditor5';
-import { ArrowLeft, Save, Upload, Download, Trash } from 'lucide-vue-next';
+import { ArrowLeft, Save, Upload } from 'lucide-vue-next';
 import {
     update,
     store,
     index,
     upload,
-    imageDelete
 } from '@/actions/App/Http/Controllers/Dashboard/PostController';
 import Heading from '@/components/Heading.vue';
 import InputError from '@/components/InputError.vue';
@@ -117,15 +116,14 @@ watch(() => dropFiles.value, (newFiles) => {
     console.log(newFiles);
     if (props.post.id) {
         if (newFiles.length > 0) {
-            // multiple
 
             // 2. Tomamos el último archivo añadido
             imageFile.value = newFiles[newFiles.length - 1];
 
             uploadImage()
-        } else {
-            // sipo single
+        }else{
             imageFile.value = newFiles as File;
+            console.log('*********')
             console.log(imageFile.value);
         }
     }
@@ -265,8 +263,8 @@ watch(() => dropFiles.value, (newFiles) => {
                                 <Button @click="uploadImage">Upload</Button>
                             </div>
 
-                            <o-upload x-model="post.image" v-model="dropFiles" name="image">
-                                <o-button tag="a" variant="primary">
+                            <o-upload v-model="post.image" x-model="dropFiles" name="image" >
+                                <o-button tag="a" variant="primary" >
                                     <Upload class="h-4 w-4 text-primary" />
                                 </o-button>
                             </o-upload>
@@ -295,24 +293,7 @@ watch(() => dropFiles.value, (newFiles) => {
             </Card>
         </Form>
 
-        <div class="px-4 py-6 max-w-xl" v-if="post.image">
-            <img :src="'/image/post/' + post.image" :alt="post.title" class="max-w-sm rounded-md shadow-sm">
 
-            <div class="flex gap-2 mt-2">
-                <Button variant="outline" size="sm" as-child>
-                    <a :href="'/image/post/' + post.image" :download="post.image">
-                        <Download class="mr-2 h-4 w-4" />
-                        Descargar Imagen
-                    </a>
-                </Button>
-
-                <Button variant="destructive" size="sm" @click="router.delete(imageDelete(post.id).url)">
-                    <Trash class="mr-2 h-4 w-4" />
-                    Delete
-                </Button>
-            </div>
-
-        </div>
 
 
         <o-upload class="" v-model="dropFiles" multiple drag-drop>

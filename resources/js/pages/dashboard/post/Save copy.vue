@@ -1,26 +1,13 @@
 <script setup lang="ts">
 import { Ckeditor } from '@ckeditor/ckeditor5-vue';
-
-import { ref, watch } from 'vue';
-
 import { Head, Form, Link, router } from '@inertiajs/vue3';
-import {
-    ClassicEditor,
-    Bold,
-    Essentials,
-    Italic,
-    Mention,
-    Paragraph,
-    Undo,
-    Heading as CHeading,
-} from 'ckeditor5';
-import { ArrowLeft, Save, Upload, Download, Trash } from 'lucide-vue-next';
+import { ClassicEditor, Bold, Essentials, Italic, Mention, Paragraph, Undo, Heading as CHeading } from 'ckeditor5';
+import { ArrowLeft, Save } from 'lucide-vue-next';
 import {
     update,
     store,
     index,
-    upload,
-    imageDelete
+    upload
 } from '@/actions/App/Http/Controllers/Dashboard/PostController';
 import Heading from '@/components/Heading.vue';
 import InputError from '@/components/InputError.vue';
@@ -41,10 +28,9 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 
-import 'ckeditor5/ckeditor5.css';
 
-const imageFile = ref<File | null>(null);
-const dropFiles = ref("")
+
+import 'ckeditor5/ckeditor5.css';
 
 const props = defineProps<{
     post: {
@@ -69,68 +55,42 @@ defineOptions({
                 href: index(),
             },
             {
-                title: 'Save',
-            },
+                title: 'Save'
+            }
         ],
     },
 });
 
-const editor = ClassicEditor;
+const editor = ClassicEditor
 const editorConfig = {
     licenseKey: 'GPL',
     plugins: [Bold, Essentials, Italic, Mention, Paragraph, Undo, CHeading],
-    toolbar: ['undo', 'redo', '|', 'bold', 'italic', 'heading'],
-};
+    toolbar: ['undo', 'redo', '|', 'bold', 'italic', 'heading',],
+}
 
 function uploadImage() {
     // Verificamos que exista un ID y una imagen antes de intentar subir
-    if (!props.post.id || !imageFile.value) {
-        console.error(
-            'No hay ID de post o no se ha seleccionado ninguna imagen',
-        );
+    if (!props.post.id || !props.post.image) {
+        console.error("No hay ID de post o no se ha seleccionado ninguna imagen");
 
         return;
     }
 
-    router.post(
-        upload(props.post.id).url,
-        {
-            _method: 'post', // A veces útil si el backend espera un spoofing de método
-            image: imageFile.value,
+    router.post(upload(props.post.id).url, {
+        _method: 'post', // A veces útil si el backend espera un spoofing de método
+        image: props.post.image,
+    }, {
+        forceFormData: true,
+        preserveScroll: true,
+        onSuccess: () => {
+            // Opcional: limpiar el input o mostrar mensaje
+            console.log("Imagen subida con éxito");
         },
-        {
-            forceFormData: true,
-            preserveScroll: true,
-            onSuccess: () => {
-                // Opcional: limpiar el input o mostrar mensaje
-                console.log('Imagen subida con éxito');
-            },
-            onError: (errors) => {
-                console.error('Error al subir:', errors);
-            },
-        },
-    );
-}
-
-watch(() => dropFiles.value, (newFiles) => {
-    // 1. Verificamos que haya archivos y que el post tenga ID
-    console.log(newFiles);
-    if (props.post.id) {
-        if (newFiles.length > 0) {
-            // multiple
-
-            // 2. Tomamos el último archivo añadido
-            imageFile.value = newFiles[newFiles.length - 1];
-
-            uploadImage()
-        } else {
-            // sipo single
-            imageFile.value = newFiles as File;
-            console.log(imageFile.value);
+        onError: (errors) => {
+            console.error("Error al subir:", errors);
         }
-    }
-}, { deep: true });
-
+    });
+}
 </script>
 
 <template>
@@ -149,8 +109,12 @@ watch(() => dropFiles.value, (newFiles) => {
 
         <Heading :title="post.id ? 'Edit Post' : 'Create Post'" description="Fill in the details below" />
 
+        <o-button @click="console.log('click')">Oruga</o-button>
+
+        <o-button>oruga-ui</o-button>
+
         <Form v-bind="post.id ? update.form(post.id) : store.form()" class="space-y-0"
-            v-slot="{ errors, processing, recentlySuccessful, defaults }">
+            v-slot="{ errors, processing, recentlySuccessful }">
             <Card>
                 <CardHeader class="space-y-1 pb-4">
                     <h3 class="text-lg font-medium">Post Information</h3>
@@ -161,31 +125,41 @@ watch(() => dropFiles.value, (newFiles) => {
                 <CardContent class="space-y-4">
                     <div class="grid gap-4 md:grid-cols-2">
                         <div class="space-y-2">
-                            <Label for="title">
+                            <label for="title"
+                                class="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                                 Title <span class="text-destructive">*</span>
-                            </Label>
-                            <Input id="title" name="title" v-model="post.title" required />
+                            </label>
+                            <input id="title" name="title" v-model="post.title" required
+                                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50" />
                             <InputError :message="errors.title" />
                         </div>
 
                         <div class="space-y-2">
-                            <Label for="slug"> Slug </Label>
-                            <Input id="slug" name="slug" v-model="post.slug" />
+                            <label for="slug"
+                                class="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                Slug
+                            </label>
+                            <input id="slug" name="slug" v-model="post.slug"
+                                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 font-mono text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50" />
                             <InputError :message="errors.slug" />
                         </div>
                     </div>
 
                     <div class="space-y-2">
-                        <Label for="description">
+                        <label for="description"
+                            class="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                             Description <span class="text-destructive">*</span>
-                        </Label>
+                        </label>
                         <textarea id="description" name="description" v-model="post.description" rows="3" required
                             class="flex w-full resize-none rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"></textarea>
                         <InputError :message="errors.description" />
                     </div>
 
                     <div class="space-y-2">
-                        <Label for="text"> Content </Label>
+                        <label for="text"
+                            class="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                            Content
+                        </label>
                         <ckeditor v-model="post.text" :editor="editor" :config="editorConfig" />
                         <textarea id="text" name="text" v-model="post.text" rows="6"
                             class="flex w-full resize-none rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"></textarea>
@@ -194,9 +168,10 @@ watch(() => dropFiles.value, (newFiles) => {
 
                     <div class="grid gap-4 md:grid-cols-3">
                         <div class="space-y-2">
-                            <Label for="category_id">
+                            <label for="category_id"
+                                class="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                                 Category <span class="text-destructive">*</span>
-                            </Label>
+                            </label>
                             <input name="category_id" type="hidden" v-model="post.category_id" />
                             <Select name="category_id" v-model="post.category_id">
                                 <SelectTrigger class="w-full">
@@ -213,9 +188,10 @@ watch(() => dropFiles.value, (newFiles) => {
                         </div>
 
                         <div class="space-y-2">
-                            <Label for="type">
+                            <label for="type"
+                                class="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                                 Type <span class="text-destructive">*</span>
-                            </Label>
+                            </label>
 
                             <Select name="type" v-model="post.type">
                                 <SelectTrigger class="w-full">
@@ -232,9 +208,10 @@ watch(() => dropFiles.value, (newFiles) => {
                         </div>
 
                         <div class="space-y-2">
-                            <Label for="posted">
+                            <label for="posted"
+                                class="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                                 Status <span class="text-destructive">*</span>
-                            </Label>
+                            </label>
                             <Select name="posted" v-model="post.posted">
                                 <SelectTrigger class="w-full">
                                     <SelectValue placeholder="Select a status" />
@@ -248,30 +225,19 @@ watch(() => dropFiles.value, (newFiles) => {
                             <InputError :message="errors.posted" />
                         </div>
 
-                        <div class="flex flex-col col-span-3 gap-2" v-if="post.id">
+                        <template v-if="post.id">
+                            <div class="px-4 py-6 max-w-xl">
 
-                            <div class=" flex flex-col">
-                                <Label>Image</Label>
-                                <Input type="file" name="image" @change="
-                                    (e) => {
-                                        const file =
-                                            e.target.files?.[0];
-                                        if (file) {
-                                            imageFile = file;
-                                        }
-                                    }
-                                " />
-                                <InputError :message="errors.image" class="mt-2" />
-                                <Button @click="uploadImage">Upload</Button>
+                                <div class="col-span-6">
+                                    <Label>Image</Label>
+                                    <Input type="file" @input="post.image = $event.target.files[0]" />
+                                    <InputError :message="errors.image" class="mt-2" />
+                                    <Button @click="uploadImage">Upload</Button>
+                                </div>
                             </div>
 
-                            <o-upload x-model="post.image" v-model="dropFiles" name="image">
-                                <o-button tag="a" variant="primary">
-                                    <Upload class="h-4 w-4 text-primary" />
-                                </o-button>
-                            </o-upload>
+                        </template>
 
-                        </div>
                     </div>
                 </CardContent>
                 <CardFooter class="flex items-center justify-between border-t pt-6">
@@ -294,35 +260,5 @@ watch(() => dropFiles.value, (newFiles) => {
                 </CardFooter>
             </Card>
         </Form>
-
-        <div class="px-4 py-6 max-w-xl" v-if="post.image">
-            <img :src="'/image/post/' + post.image" :alt="post.title" class="max-w-sm rounded-md shadow-sm">
-
-            <div class="flex gap-2 mt-2">
-                <Button variant="outline" size="sm" as-child>
-                    <a :href="'/image/post/' + post.image" :download="post.image">
-                        <Download class="mr-2 h-4 w-4" />
-                        Descargar Imagen
-                    </a>
-                </Button>
-
-                <Button variant="destructive" size="sm" @click="router.delete(imageDelete(post.id).url)">
-                    <Trash class="mr-2 h-4 w-4" />
-                    Delete
-                </Button>
-            </div>
-
-        </div>
-
-
-        <o-upload class="" v-model="dropFiles" multiple drag-drop>
-            <section class="ex-center text-black flex flex-col items-center justify-center gap-3">
-                <p>
-                    <Upload class="h-8 w-8 text-black" />
-                </p>
-                <p>Drop your files here or click to upload</p>
-            </section>
-        </o-upload>
-
     </div>
 </template>

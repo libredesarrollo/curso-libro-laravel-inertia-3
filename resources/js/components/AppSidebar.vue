@@ -2,6 +2,9 @@
 import { Link, usePage } from '@inertiajs/vue3';
 import { BookOpen, FolderGit2, LayoutGrid, ALargeSmallIcon } from 'lucide-vue-next';
 import { computed } from 'vue';
+import { index as CategoryIndex } from '@/actions/App/Http/Controllers/Dashboard/CategoryController'
+import { index as PostIndex } from '@/actions/App/Http/Controllers/Dashboard/PostController'
+import { index as TagIndex } from '@/actions/App/Http/Controllers/Dashboard/TagController'
 import AppLogo from '@/components/AppLogo.vue';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
@@ -19,9 +22,6 @@ import {
 import { dashboard } from '@/routes';
 import type { NavItem } from '@/types';
 
-import { index as CategoryIndex } from '@/actions/App/Http/Controllers/Dashboard/CategoryController'
-import { index as PostIndex } from '@/actions/App/Http/Controllers/Dashboard/PostController'
-import { index as TagIndex } from '@/actions/App/Http/Controllers/Dashboard/TagController'
 
 const page = usePage();
 
