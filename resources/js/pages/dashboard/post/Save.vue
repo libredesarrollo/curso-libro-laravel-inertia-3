@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { Ckeditor } from '@ckeditor/ckeditor5-vue';
 
-import { ref, watch } from 'vue';
 
 import { Head, Form, Link, router } from '@inertiajs/vue3';
 import {
@@ -15,6 +14,7 @@ import {
     Heading as CHeading,
 } from 'ckeditor5';
 import { ArrowLeft, Save, Upload, Download, Trash } from 'lucide-vue-next';
+import { ref, watch } from 'vue';
 import {
     update,
     store,
@@ -115,6 +115,7 @@ function uploadImage() {
 watch(() => dropFiles.value, (newFiles) => {
     // 1. Verificamos que haya archivos y que el post tenga ID
     console.log(newFiles);
+
     if (props.post.id) {
         if (newFiles.length > 0) {
             // multiple
