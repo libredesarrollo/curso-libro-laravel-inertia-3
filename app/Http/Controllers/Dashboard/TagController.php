@@ -11,7 +11,7 @@ class TagController extends Controller
 {
     public function index()
     {
-        $tags = Tag::paginate(10);
+        $tags = Tag::paginate(15);
 
         return inertia('dashboard/tag/Index', compact('tags'));
     }

@@ -1,6 +1,6 @@
 import { createInertiaApp } from '@inertiajs/vue3';
 import Oruga from '@oruga-ui/oruga-next';
-import { OButton, OModal, OUpload, OIcon } from "@oruga-ui/oruga-next";
+import { OButton, OModal, OUpload, OInput } from "@oruga-ui/oruga-next";
 import { createApp, h } from 'vue';
 import { initializeTheme } from '@/composables/useAppearance';
 import AppLayout from '@/layouts/AppLayout.vue';
@@ -42,7 +42,8 @@ createInertiaApp({
             
             app.component('o-button', OButton);
             app.component('o-modal', OModal);
-            app.component('o-upload', OUpload);
+            app.component('o-upload', OUpload); 
+            app.component('o-input', OInput);
 
             app.mount(el);
         

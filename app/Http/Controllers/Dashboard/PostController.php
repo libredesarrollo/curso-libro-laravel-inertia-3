@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\PostRequest;
 use App\Models\Category;
 use App\Models\Post;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -14,9 +15,58 @@ class PostController extends Controller
 {
     public function index()
     {
-        $posts = Post::with('category')->paginate(10);
+        // $posts = Post::with('category')->paginate(15)->withQueryString();
+        
+        // $posts = Post::where("id", ">=", 1);
+        // $posts = Post::query();
+       
+        // if(request()->filled('posted')){
+        //     $posts->where('posted', request('posted'));
+        // }
+        // if( request()->filled('category_id')){
+        //     $posts->where('category_id', request('category_id'));
+        // }
+    
+        // if( request()->filled('type')){
+        //     $posts->where('type', request('type'));
+        // }
+        
+        // //dd($posts->with('category')->toSql());
+        // $posts = $posts->with('category')->paginate(15)->withQueryString();
 
-        return inertia('dashboard/post/Index', compact('posts'));
+        $posts = Post::with('category')
+            ->when(request('type'), function(Builder $query, $type) {
+                $query->where('type', $type);
+            })
+            ->when(request('category_id'), function(Builder $query, $category_id) {
+                $query->where('category_id', $category_id);
+            })
+            ->when(request('posted'), function(Builder $query, $posted) {
+                $query->where('posted', $posted);
+            })
+            ->when(request('search'), function (Builder $query, string $search) {
+                $query->where(function ($query) use ($search) {
+                    $query->orWhere('id', 'like', "%" . $search . "%")
+                        ->orWhere('title', 'like', "%" . $search . "%")
+                        ->orWhere('description', 'like', "%" . $search . "%");
+                });
+            })
+            ->when(request('from'), function($q, $from) {
+                $q->whereDate('date', '>=', $from);
+            })
+            ->when(request('to'), function($q, $to) {
+                $q->whereDate('date', '<=', $to);
+            })
+            ->paginate(15)->withQueryString();
+            // dd($posts->toSql());
+            //
+
+
+        return inertia('dashboard/post/Index',[
+        'posts' => $posts,
+        'categories' => Category::orderBy('title')->get(['id', 'title']),
+        'filters' => request()->only(['posted', 'type', 'category_id','search', 'to', 'from']), // Enviamos los filtros de vuelta
+    ]);
     }
 
     public function create()
