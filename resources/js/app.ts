@@ -4,6 +4,13 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
 
+import { createApp, h } from 'vue';
+
+import Oruga from '@oruga-ui/oruga-next';
+
+import { OButton, OModal } from "@oruga-ui/oruga-next";
+
+import '/node_modules/@oruga-ui/theme-oruga/dist/theme.css';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -26,6 +33,19 @@ createInertiaApp({
         color: '#F00',
         includeCSS: true,
         showSpinner: true,
+    },
+        setup({ el, App, props, plugin }) {
+        const app = createApp({ render: () => h(App, props) })
+
+            app.use(plugin)
+            app.use(Oruga)
+            
+            app.component('o-button', OButton);
+            app.component('o-modal', OModal);
+
+            app.mount(el);
+            
+
     },
 });
 

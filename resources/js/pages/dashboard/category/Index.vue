@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import { Head, Form, usePage } from '@inertiajs/vue3';
+import { Head, router, usePage } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
 import Heading from '@/components/Heading.vue';
 import Pagination from '@/components/shared/Pagination.vue';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+
+import { ref } from 'vue';
+
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -27,10 +30,35 @@ defineProps<{
 }>();
 
 const page = usePage();
+
+let confirmDeleteActive = ref(false);
+let deleteCategoryRow = ref<number | string>(""); // Guardamos el ID aquí
+
+const deleteCategory = () => {
+    // 1. Usamos .value para obtener el ID guardado
+    // 2. Ejecutamos la acción de borrado
+    router.delete(destroy(deleteCategoryRow.value).url, {
+        preserveScroll: true,
+        onSuccess: () => {
+            confirmDeleteActive.value = false;
+            deleteCategoryRow.value = "";
+        }
+    });
+};
+
+
 </script>
 
 <template>
     <Head title="Categories" />
+
+    <o-modal v-model:active="confirmDeleteActive">
+    <p class="p-4 text-black">Are you sure you want to delete the selected record?</p>
+    <div class="flex flex-row-reverse gap-2 bg-gray-100 p-3">
+      <o-button variant="danger" @click="deleteCategory">Delete</o-button>
+      <o-button @click="confirmDeleteActive = false">Cancel</o-button>
+    </div>
+  </o-modal>
 
     <div class="space-y-6 px-4 py-6">
         <div class="flex items-center justify-between">
@@ -114,7 +142,17 @@ const page = usePage();
                                             </Link>
                                         </DropdownMenuItem>
                                         <DropdownMenuSeparator />
-                                        <Form
+                                         <DropdownMenuItem as-child>
+                                            <Button
+                                                variant="destructive"
+                                                @click="confirmDeleteActive = true; deleteCategoryRow = category.id"
+                                                class="w-full"
+                                            >
+                                                <Trash2 class="mr-2 h-4 w-4" />
+                                                Delete
+                                         </Button>
+                                        </DropdownMenuItem>
+                                        <!-- <Form
                                             v-bind="destroy.form(category.id)"
                                             v-slot="{ processing }"
                                         >
@@ -127,7 +165,7 @@ const page = usePage();
                                                 <Trash2 class="mr-2 h-4 w-4" />
                                                 Delete
                                             </DropdownMenuItem>
-                                        </Form>
+                                        </Form> -->
                                     </DropdownMenuContent>
                                 </DropdownMenu>
                             </td>

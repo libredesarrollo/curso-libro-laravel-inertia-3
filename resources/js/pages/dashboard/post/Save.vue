@@ -81,6 +81,10 @@ const editorConfig = {
         </div>
 
         <Heading :title="post.id ? 'Edit Post' : 'Create Post'" description="Fill in the details below" />
+        
+        <o-button @click="console.log('click')">Oruga</o-button>
+
+        <o-button>oruga-ui</o-button>
 
         <Form v-bind="post.id ? update.form(post.id) : store.form()" class="space-y-0"
             v-slot="{ errors, processing, recentlySuccessful }">
