@@ -26,7 +26,7 @@ defineProps<{
 
 <template>
     <Head :title="category.id ? 'Edit Category' : 'Create Category'" />
-
+    {{  $page }}
     <div class="mx-auto max-w-2xl space-y-6">
         <div class="flex items-center gap-4">
             <Button variant="ghost" size="sm" as-child>
@@ -65,7 +65,7 @@ defineProps<{
                         <input
                             id="title"
                             name="title"
-                            :value="category.title"
+                            v-model="category.title"
                             required
                             class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                         />
@@ -82,7 +82,7 @@ defineProps<{
                         <input
                             id="slug"
                             name="slug"
-                            :value="category.slug"
+                            v-model="category.slug"
                             class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 font-mono text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                         />
                         <InputError :message="errors.slug" />
