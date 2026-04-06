@@ -17,7 +17,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::paginate(15);
+        $categories = Category::filterDataTable(request()->only([ 'search', 'sortColumn', 'sortDirection']))
+            ->paginate(15)
+            ->withQueryString();
 
         return inertia('dashboard/category/Index',compact('categories'));
     }

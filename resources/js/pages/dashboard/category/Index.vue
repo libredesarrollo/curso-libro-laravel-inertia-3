@@ -1,4 +1,6 @@
 <script setup lang="ts">
+
+import { watch } from 'vue';
 import { Head, router, usePage } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
 import { MoreHorizontal, Plus, Pencil, Trash2 } from 'lucide-vue-next';
@@ -7,12 +9,12 @@ import {
     create,
     edit,
     destroy,
+    index
 } from '@/actions/App/Http/Controllers/Dashboard/CategoryController';
 import Heading from '@/components/Heading.vue';
 import Pagination from '@/components/shared/Pagination.vue';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-
 
 import {
     DropdownMenu,
@@ -22,10 +24,22 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-defineProps<{
+import { DataTable } from '@/components/shared/DataTable';
+import { useFilters } from '@/composables/useFilters';
+
+const props = defineProps<{
     categories: {
-        data: Array<{ id: number; title: string; slug: string }>;
+        data: Array<{
+            id: number;
+            title: string;
+            slug: string;
+        }>;
         links: Array<{ url: string | null; label: string; active: boolean }>;
+    };
+    filters?: {
+        search?: string;
+        sortColumn?: string;
+        sortDirection?: 'asc' | 'desc';
     };
 }>();
 
@@ -34,6 +48,24 @@ const page = usePage();
 const confirmDeleteActive = ref(false);
 const deleteCategoryRow = ref<number | string>(""); // Guardamos el ID aquí
 
+const columns = {
+    id: 'Id',
+    title: 'Title'
+};
+
+const { filters, applyFilters } = useFilters(index().url, {
+    search: props.filters?.search || '',
+    sortColumn: props.filters?.sortColumn || 'id',
+    sortDirection: props.filters?.sortDirection || 'desc',
+});
+
+// Para el buscador con debounce
+watch(
+    () => filters.value.search,
+    () => applyFilters(),
+);
+
+// MODAL ELIMINAR
 const deleteCategory = () => {
     // 1. Usamos .value para obtener el ID guardado
     // 2. Ejecutamos la acción de borrado
@@ -78,43 +110,54 @@ const deleteCategory = () => {
             {{ page.props.flash.message }}
         </div>
 
+         <div class="filters-grid" id="filters">
+            
+            <input
+                v-model="filters.search"
+                type="search"
+                placeholder="Search..."
+                class="filter-input"
+                @input="applyFilters()"
+            />
+            
+            <div>
+                <Button variant="ghost" as-child >
+                <Link :href="index().url">
+                    <ArrowLeft class="mr-2 h-4 w-4" />
+                    Clear
+                </Link>
+            </Button>
+            </div>
+        </div>
+
         <Card class="overflow-hidden">
             <div class="overflow-x-auto">
-                <table class="w-full">
-                    <thead class="border-b bg-muted/50">
-                        <tr>
-                            <th
-                                class="px-4 py-3 text-left text-sm font-medium text-muted-foreground"
-                            >
-                                Title
-                            </th>
-                            <th
-                                class="px-4 py-3 text-left text-sm font-medium text-muted-foreground"
-                            >
-                                Slug
-                            </th>
-                            <th
-                                class="px-4 py-3 text-right text-sm font-medium text-muted-foreground"
-                            >
-                                Actions
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y">
-                        <tr
-                            v-for="category in categories.data"
-                            :key="category.id"
-                            class="transition-colors hover:bg-muted/30"
-                        >
-                            <td class="px-4 py-3 text-sm font-medium">
-                                {{ category.title }}
-                            </td>
-                            <td
-                                class="px-4 py-3 font-mono text-sm text-muted-foreground"
-                            >
-                                {{ category.slug }}
-                            </td>
-                            <td class="px-4 py-3 text-right">
+                <DataTable
+                :columns="columns"
+                :data="categories.data"
+                :sort-column="filters.sortColumn"
+                :sort-direction="filters.sortDirection"
+                @sort="applyFilters"
+            >
+                <template #default="{ row }">
+                    <td class="px-4 py-3">{{ row.id }}</td>
+                    <td class="px-4 py-3">
+                        <div class="flex items-center gap-3">
+                            <FileText class="h-4 w-4 text-muted-foreground" />
+                            <div>
+                                <p class="text-sm font-medium">
+                                    {{ row.title }}
+                                </p>
+                                <p
+                                    class="font-mono text-xs text-muted-foreground"
+                                >
+                                    {{ row.slug }}
+                                </p>
+                            </div>
+                        </div>
+                    </td>
+                   
+                    <td class="px-4 py-3 text-right">
                                 <DropdownMenu>
                                     <DropdownMenuTrigger as-child>
                                         <Button
@@ -134,7 +177,7 @@ const deleteCategory = () => {
                                     >
                                         <DropdownMenuItem as-child>
                                             <Link
-                                                :href="edit(category.id).url"
+                                                :href="edit(row.id).url"
                                                 class="cursor-pointer"
                                             >
                                                 <Pencil class="mr-2 h-4 w-4" />
@@ -145,7 +188,7 @@ const deleteCategory = () => {
                                          <DropdownMenuItem as-child>
                                             <Button
                                                 variant="destructive"
-                                                @click="confirmDeleteActive = true; deleteCategoryRow = category.id"
+                                                @click="confirmDeleteActive = true; deleteCategoryRow = row.id"
                                                 class="w-full"
                                             >
                                                 <Trash2 class="mr-2 h-4 w-4" />
@@ -169,17 +212,9 @@ const deleteCategory = () => {
                                     </DropdownMenuContent>
                                 </DropdownMenu>
                             </td>
-                        </tr>
-                        <tr v-if="categories.data.length === 0">
-                            <td
-                                colspan="3"
-                                class="px-4 py-8 text-center text-sm text-muted-foreground"
-                            >
-                                No categories found. Create your first one.
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                </template>
+            </DataTable>
+        
             </div>
         </Card>
 

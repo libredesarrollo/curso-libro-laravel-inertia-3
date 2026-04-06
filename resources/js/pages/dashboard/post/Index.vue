@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Head, usePage, Form } from '@inertiajs/vue3';
-import { Link, router } from '@inertiajs/vue3';
+import { Link } from '@inertiajs/vue3';
 import {
     MoreHorizontal,
     Plus,
@@ -9,8 +9,7 @@ import {
     FileText,
     ArrowLeft,
 } from 'lucide-vue-next';
-import { computed } from 'vue';
-import { ref, watch } from 'vue';
+import { watch } from 'vue';
 import {
     create,
     edit,
@@ -104,63 +103,6 @@ watch(
     () => filters.value.search,
     () => applyFilters(),
 );
-
-// const sortColumn = computed(() => props.filters?.sortColumn || 'id');
-// const sortDirection = computed(() => props.filters?.sortDirection || 'desc');
-
-// const posted = ref(props.filters?.posted || '');
-// const type = ref(props.filters?.type || '');
-// const category_id = ref(props.filters?.category_id || '');
-// const search = ref(props.filters?.search || '');
-// const to = ref(props.filters?.to || '');
-// const from = ref(props.filters?.from || '');
-
-// function customSearch(newSortColumn?: string) {
-//     const sortCol = newSortColumn || sortColumn.value;
-
-//     /*
-//         ¿Existe newSortColumn? (¿El usuario hizo clic en un encabezado?)
-
-//         NO (Filtro normal): Entonces mantén la dirección que ya teníamos (sortDirection.value).
-
-//         SÍ (Clic en tabla): Pasa a la siguiente pregunta...
-
-//         ¿Es la misma columna que ya estaba activa?
-
-//         NO (Columna nueva): Por defecto, ponemos el orden en 'asc'.
-
-//         SÍ (Misma columna): Pasa a la siguiente pregunta...
-
-//         ¿Cuál era el orden actual?
-
-//         Si era 'asc', cámbialo a 'desc'.
-
-//         Si era 'desc', cámbialo a 'asc'.
-//     */
-//     const sortDir = newSortColumn // asc o desc
-//         ? (newSortColumn === sortColumn.value ? (sortDirection.value === 'asc' ? 'desc' : 'asc') : 'asc')
-//         : sortDirection.value;
-
-//     router.get(index().url, {
-//         category_id: category_id.value,
-//         type: type.value,
-//         posted: posted.value,
-//         search: search.value,
-//         to: to.value,
-//         from: from.value,
-//         sortColumn: sortCol,
-//         sortDirection: sortDir,
-//     },
-//         {
-//             preserveScroll: true, // Evita que la página salte al inicio al recargar los datos
-//             preserveState: true,  // Mantiene el estado de los componentes (foco, valores de inputs, etc.)
-//             replace: true         // Opcional: actualiza la URL sin crear una nueva entrada en el historial
-//         });
-// }
-
-// function handleSort(column: string) {
-//     customSearch(column);
-// }
 
 const typeColors: Record<string, string> = {
     post: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
