@@ -1,13 +1,12 @@
 <script setup lang="ts">
-type Props = {
-    breadcrumbs?: { title: string; href?: string }[];
-};
-
-
+import CartCount from '@/fragment/CartCount.vue';
+import ToastContainer from '@/components/ToastContainer.vue';
 </script>
 
 <template>
     <div class="px-4 py-6">
         <slot />
     </div>
+    <CartCount />
+    <ToastContainer />
 </template>

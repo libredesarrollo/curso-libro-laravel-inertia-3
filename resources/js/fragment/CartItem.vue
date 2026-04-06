@@ -7,8 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 
-// Oruga hooks
-import { useOruga } from '@oruga-ui/oruga-next';
+// Custom notification
+import { useNotification } from '@/composables/useNotification';
 
 // Props
 const props = defineProps<{
@@ -20,8 +20,7 @@ const props = defineProps<{
     active?: boolean;
 }>();
 
-// Oruga instance
-const oruga = useOruga();
+const { add } = useNotification();
 
 // Estado Reactivo
 const count = ref(props.pcount || '1');
@@ -36,13 +35,7 @@ const submit = () => {
         {
             preserveScroll: true,
             onSuccess: () => {
-                oruga.notification.open({
-                    message: 'Cart updated',
-                    variant: 'success',
-                    position: 'top-right',
-                    duration: 2000,
-                    closable: true,
-                });
+                add('Cart updated', 'success');
             },
         },
     );

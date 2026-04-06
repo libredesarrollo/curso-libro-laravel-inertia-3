@@ -52,10 +52,33 @@ Route::group([
 // BLOG
 Route::group([
     'prefix' => 'blog',
-
 ], function () {
     Route::get('/', [App\Http\Controllers\Blog\PostController::class, 'index'])->name('web.index');
     Route::get('/{post:slug}', [App\Http\Controllers\Blog\PostController::class, 'show'])->name('web.show');
+});
+
+// SHOP
+Route::group([
+    'prefix' => 'shop',
+
+], function () {
+    Route::get('/', [App\Http\Controllers\Shop\CartController::class, 'index'])->name('shop.index');
+    Route::post('/add/{post}/{count}', [App\Http\Controllers\Shop\CartController::class, 'add'])->name('shop.add');
+});
+
+// TODO
+Route::middleware(
+    [
+        'middleware' => 'auth',
+        'verified'
+    ]
+)->prefix('todo')->group(function () {
+    Route::get('/', [App\Http\Controllers\TodoController::class, 'index'])->name('todo.index');
+    Route::post('/store', [App\Http\Controllers\TodoController::class, 'store'])->name('todo.store');
+    Route::put('/update/{todo}', [App\Http\Controllers\TodoController::class, 'update'])->name('todo.update');
+    Route::delete('/destroy/{todo?}', [App\Http\Controllers\TodoController::class, 'destroy'])->name('todo.destroy');
+    Route::post('/status/{todo}', [App\Http\Controllers\TodoController::class, 'status'])->name('todo.status');
+    Route::post('/order', [App\Http\Controllers\TodoController::class, 'order'])->name('todo.order');
 });
 
 require __DIR__.'/settings.php';

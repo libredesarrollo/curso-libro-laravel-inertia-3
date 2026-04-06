@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import WebLayout from '@/layouts/WebLayout.vue';
-// import GeneralStep from "@/Pages/Contact/General/Step.vue";
-// import Cart from "@/fragment/Cart.vue";
-// import CartItem from '@/fragment/CartItem.vue';
+import GeneralStep from "@/pages/contact/general/Step.vue";
+import Cart from "@/fragment/Cart.vue";
+import CartItem from '@/fragment/CartItem.vue';
+
+import { usePage } from '@inertiajs/vue3';
 
 // 1. Definición de props con tipos
 defineProps<{
@@ -19,6 +21,9 @@ defineProps<{
     };
     errors: Record<string, any>;
 }>();
+
+const page = usePage();
+
 </script>
 
 <template>
@@ -59,17 +64,16 @@ defineProps<{
                             </div>
                         </div>
 
-                        <!-- <transition name="fade-slide">
+                        <transition name="fade-slide">
                             <div 
                                 class="mycard-primary mb-5 block max-w-96 border-l-4 border-primary" 
-                                v-if="!$page.props.cart[post.id]"
-                            >
+                                 v-if="!page.props.cart[post.id]">
                                 <div class="mycard-body p-4">
                                     <h3 class="text-xl mb-3 font-semibold">Añadir este artículo</h3>
                                     <CartItem :post="post" />
                                 </div>
                             </div>
-                        </transition> -->
+                        </transition>
                     </template>
 
                     <hr class="border-gray-200 dark:border-gray-700" />

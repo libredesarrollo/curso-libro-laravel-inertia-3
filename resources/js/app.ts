@@ -1,7 +1,13 @@
 import { createInertiaApp } from '@inertiajs/vue3';
 import Oruga from '@oruga-ui/oruga-next';
-import { OButton, OModal, OUpload, OInput } from "@oruga-ui/oruga-next";
-import { createApp, h } from 'vue';
+import {
+    OButton,
+    OModal,
+    OUpload,
+    OInput,
+    ONotification,
+} from '@oruga-ui/oruga-next';
+import { createApp, h, onMounted, ref } from 'vue';
 import { initializeTheme } from '@/composables/useAppearance';
 
 import AppLayout from '@/layouts/AppLayout.vue';
@@ -9,9 +15,6 @@ import AuthLayout from '@/layouts/AuthLayout.vue';
 import WebLayout from '@/layouts/WebLayout.vue';
 
 import SettingsLayout from '@/layouts/settings/Layout.vue';
-
-
-
 
 import '/node_modules/@oruga-ui/theme-oruga/dist/theme.css';
 
@@ -25,8 +28,10 @@ createInertiaApp({
                 return null;
             // 2. Vistas de la Web Pública (Posts, Cursos, etc.)
             // Si tus archivos están en 'Pages/Web/...' usa name.startsWith('Web/')
-            case name.startsWith('blog/'): 
-            case name.startsWith('contact/'): 
+            case name.startsWith('blog/'):
+            case name.startsWith('contact/'):
+            case name.startsWith('shop/'):
+            case name.startsWith('todo/'):
                 return WebLayout;
             case name.startsWith('auth/'):
                 return AuthLayout;
@@ -42,19 +47,19 @@ createInertiaApp({
         includeCSS: true,
         showSpinner: true,
     },
-        setup({ el, App, props, plugin }) {
-        const app = createApp({ render: () => h(App, props) })
+    setup({ el, App, props, plugin }) {
+        const app = createApp({ render: () => h(App, props) });
 
-            app.use(plugin)
-            app.use(Oruga)
-            
-            app.component('o-button', OButton);
-            app.component('o-modal', OModal);
-            app.component('o-upload', OUpload); 
-            app.component('o-input', OInput);
+        app.use(plugin);
+        app.use(Oruga);
 
-            app.mount(el);
-        
+        app.component('o-button', OButton);
+        app.component('o-modal', OModal);
+        app.component('o-upload', OUpload);
+        app.component('o-input', OInput);
+        app.component('o-notification', ONotification);
+
+        app.mount(el as Element);
     },
 });
 
