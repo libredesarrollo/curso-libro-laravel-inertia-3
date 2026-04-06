@@ -88,9 +88,9 @@ const columns = {
 };
 
 const { filters, applyFilters } = useFilters(index().url, {
-    posted: props.filters?.posted || 'all',
-    type: props.filters?.type || 'all',
-    category_id: props.filters?.category_id || 'all',
+    posted: props.filters?.posted || '',
+    type: props.filters?.type || '',
+    category_id: props.filters?.category_id || '',
     search: props.filters?.search || '',
     to: props.filters?.to || '',
     from: props.filters?.from || '',

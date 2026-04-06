@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\Contact\CompanyController;
+use App\Http\Controllers\Contact\DetailController;
+use App\Http\Controllers\Contact\GeneralController;
+use App\Http\Controllers\Contact\PersonController;
 use App\Http\Controllers\Dashboard\CategoryController;
 use App\Http\Controllers\Dashboard\PostController;
 use App\Http\Controllers\Dashboard\TagController;
@@ -30,7 +34,21 @@ Route::middleware(['auth'])->group(function () {
         Route::post('post/{post}/upload', [PostController::class,'upload'])->name('post.upload');
         Route::delete('post/{post}/image/delete', [App\Http\Controllers\Dashboard\PostController::class, 'imageDelete'])->name('post.image-delete');
     }); 
+
+ 
     
+});
+
+   // PASO POR PASO
+Route::group([
+    'prefix' => 'contact',
+    // 'middleware' => 'auth',
+    // 'verified'
+    ],function () {
+        Route::resource('contact-general', GeneralController::class)->only(['create', 'edit', 'store', 'update']);
+        Route::resource('contact-company', CompanyController::class)->only(['create','edit','store','update']);
+        Route::resource('contact-person', PersonController::class)->only(['create','edit','store','update']);
+        Route::resource('contact-detail', DetailController::class)->only(['create','edit','store','update']);
 });
 
 require __DIR__.'/settings.php';
