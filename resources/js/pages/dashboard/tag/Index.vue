@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { watch, ref } from 'vue';
 import { Head, router, usePage } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
 import {
@@ -10,6 +9,7 @@ import {
     ArrowLeft,
     Tag as TagIcon
 } from 'lucide-vue-next';
+import { watch, ref } from 'vue';
 import {
     create,
     edit,
@@ -17,6 +17,7 @@ import {
     index,
 } from '@/actions/App/Http/Controllers/Dashboard/TagController';
 import Heading from '@/components/Heading.vue';
+import { DataTable } from '@/components/shared/DataTable';
 import Pagination from '@/components/shared/Pagination.vue';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -27,7 +28,6 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { DataTable } from '@/components/shared/DataTable';
 import { useFilters } from '@/composables/useFilters';
 
 defineOptions({

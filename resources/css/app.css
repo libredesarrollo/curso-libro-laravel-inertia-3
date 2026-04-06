@@ -174,12 +174,24 @@
 /*
 PASO POR PASO
 */
-.step{
-    @apply font-medium px-6 border-b-2  tracking-wider py-2 mt-4
+.step {
+    @apply mt-4 border-b-2 px-6 py-2 font-medium tracking-wider;
 }
 
-.active{
-    @apply border-indigo-500 rounded-t bg-gray-100 text-gray-800
+.active {
+    @apply rounded-t border-indigo-500 bg-gray-100 text-gray-800;
+}
+
+.step-end {
+    @apply mt-8 flex flex-col items-center justify-center rounded-lg border-2 border-green-500 bg-green-50 p-8 text-center;
+}
+
+.step-end-text {
+    @apply text-2xl font-bold text-green-600;
+}
+
+.step-end-subtitle {
+    @apply mt-2 text-sm text-green-700;
 }
 /*
 PASO POR PASO
@@ -212,7 +224,7 @@ CKEDITOR ESTILOS
 CKEDITOR ESTILOS
 */
 /* CKEDITOR */
-.ck-editor__main{
+.ck-editor__main {
     color: #000;
 }
 .ck-editor__editable_inline {
@@ -241,3 +253,59 @@ CKEDITOR ESTILOS
     padding: 10px;
 }
 /* CKEDITOR */
+
+/*
+  ESTILOS GLOBALES PARA FORMULARIOS
+*/
+@layer components {
+    .form-field {
+        @apply space-y-2;
+    }
+
+    .form-container {
+        @apply space-y-4;
+    }
+
+    .form-input {
+        @apply flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm;
+        @apply focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none;
+        @apply disabled:cursor-not-allowed disabled:opacity-50;
+    }
+
+    .form-textarea {
+        @apply flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm;
+        @apply focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none;
+        @apply disabled:cursor-not-allowed disabled:opacity-50;
+        @apply min-h-[100px] resize-y;
+    }
+
+    .form-select {
+        @apply flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm;
+        @apply focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none;
+        @apply disabled:cursor-not-allowed disabled:opacity-50;
+    }
+
+    .form-actions {
+        @apply mt-4 flex items-center gap-3;
+    }
+
+    .form-back-link {
+        @apply cursor-pointer text-sm text-muted-foreground transition-colors hover:text-foreground;
+    }
+
+    .filters-grid {
+        @apply my-3 grid grid-cols-2 gap-2;
+    }
+
+    .filter-input {
+        @apply block w-full rounded-md border border-input bg-background px-3 py-2 text-sm;
+    }
+
+    .filter-select {
+        @apply block w-full! rounded-md border border-input bg-background px-3 py-2 text-sm;
+    }
+
+    .filter-date {
+        @apply block w-full rounded-md border border-input bg-background px-3 py-2 text-sm dark:[&::-webkit-calendar-picker-indicator]:invert;
+    }
+}

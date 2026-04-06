@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import {  useForm } from '@inertiajs/vue3';
-import { store, update } from '@/routes/contact-person';
+import { useForm } from '@inertiajs/vue3';
 
-import Layout from '@/layouts/contact/Layout.vue';
 
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import Layout from '@/layouts/contact/Layout.vue';
+import { store, update } from '@/routes/contact-person';
 
 const props = defineProps<{
     errors: Record<string, string>;
@@ -43,43 +43,25 @@ function submit() {
 
 <template>
     <Layout>
- 
-        <form @submit.prevent="submit">
-            <div class="col-span-6">
+        <form @submit.prevent="submit" class="form-container">
+            <div class="form-field">
                 <Label>Name</Label>
-                <Input
-                    id="name"
-                    v-model="form.name"
-                    type="text"
-                    class="mt-1 block w-full"
-                    autofocus
-                />
+                <Input id="name" v-model="form.name" type="text" autofocus />
                 <InputError :message="errors?.name" class="mt-2" />
             </div>
-            <div class="col-span-6">
+            <div class="form-field">
                 <Label>Surname</Label>
-                <Input
-                    id="surname"
-                    v-model="form.surname"
-                    type="text"
-                    class="mt-1 block w-full"
-                />
+                <Input id="surname" v-model="form.surname" type="text" />
                 <InputError :message="errors?.surname" class="mt-2" />
             </div>
-            <div class="col-span-6">
+            <div class="form-field">
                 <Label>Other</Label>
-                <textarea
-                    v-model="form.other"
-                    class="mt-1 block w-full rounded-md border-gray-300"
-                ></textarea>
+                <textarea v-model="form.other" class="form-textarea"></textarea>
                 <InputError :message="errors?.other" class="mt-2" />
             </div>
-            <div class="col-span-6">
+            <div class="form-field">
                 <Label>Choices</Label>
-                <select
-                    v-model="form.choices"
-                    class="mt-1 block w-full rounded-md border-gray-300"
-                >
+                <select v-model="form.choices" class="form-select">
                     <option value="advert">Advert</option>
                     <option value="post">Post</option>
                     <option value="course">Course</option>
@@ -88,14 +70,17 @@ function submit() {
                 </select>
                 <InputError :message="errors?.choices" class="mt-2" />
             </div>
-            <Button
-                class="mt-2"
-                :class="{ 'opacity-25': form.processing }"
-                :disabled="form.processing"
-            >
-                Save
-            </Button>
-             <span class="mt-1 ml-3 cursor-pointer" @click="$emit('backStepEvent', 1)">Back</span>
+            <div class="form-actions">
+                <Button
+                    :class="{ 'opacity-25': form.processing }"
+                    :disabled="form.processing"
+                >
+                    Save
+                </Button>
+                <span class="form-back-link" @click="$emit('backStepEvent', 1)"
+                    >Back</span
+                >
+            </div>
         </form>
     </Layout>
 </template>

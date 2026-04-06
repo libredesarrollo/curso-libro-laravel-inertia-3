@@ -1,5 +1,5 @@
-import { ref, watch } from 'vue';
 import { router } from '@inertiajs/vue3';
+import { ref, watch } from 'vue';
 
 export function useFilters<T extends object>(baseUrl: string, initialFilters: T) {
     
@@ -18,6 +18,7 @@ export function useFilters<T extends object>(baseUrl: string, initialFilters: T)
                 params.sortColumn = newSortColumn;
                 params.sortDirection = 'asc';
             }
+
             // Actualizamos el ref interno para que la UI refleje el cambio
             (filters.value as any).sortColumn = params.sortColumn;
             (filters.value as any).sortDirection = params.sortDirection;

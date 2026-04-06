@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { useForm } from '@inertiajs/vue3';
 
-import Layout from '@/layouts/contact/Layout.vue';
-
-import { Label } from '@/components/ui/label';
-import InputError from '@/components/InputError.vue';
-import { Button } from '@/components/ui/button';
-
 import {
     update,
     store,
 } from '@/actions/App/Http/Controllers/Contact/DetailController';
+import InputError from '@/components/InputError.vue';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import Layout from '@/layouts/contact/Layout.vue';
+
+
 
 declare function route(name: string, params?: Record<string, unknown>): string;
 
@@ -42,27 +42,23 @@ function submit() {
 
 <template>
     <Layout>
-        <HeadingSmall
-            title="Create Contact"
-            description="Form to create contact"
-        />
-        <form @submit.prevent="submit">
-            <div class="col-span-6">
+        <form @submit.prevent="submit" class="form-container">
+            <div class="form-field">
                 <Label>Extra</Label>
-                <textarea
-                    v-model="form.extra"
-                    class="mt-1 block w-full rounded-md border-gray-300"
-                ></textarea>
+                <textarea v-model="form.extra" class="form-textarea"></textarea>
                 <InputError :message="errors?.extra" class="mt-2" />
             </div>
-            <Button
-                class="mt-2"
-                :class="{ 'opacity-25': form.processing }"
-                :disabled="form.processing"
-            >
-                Save
-            </Button>
-             <span class="mt-1 ml-3 cursor-pointer" @click="$emit('backStepEvent', 2)">Back</span>
+            <div class="form-actions">
+                <Button
+                    :class="{ 'opacity-25': form.processing }"
+                    :disabled="form.processing"
+                >
+                    Save
+                </Button>
+                <span class="form-back-link" @click="$emit('backStepEvent', 2)"
+                    >Back</span
+                >
+            </div>
         </form>
     </Layout>
 </template>

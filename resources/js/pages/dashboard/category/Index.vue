@@ -1,9 +1,9 @@
 <script setup lang="ts">
 
-import { watch } from 'vue';
 import { Head, router, usePage } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
 import { MoreHorizontal, Plus, Pencil, Trash2 } from 'lucide-vue-next';
+import { watch } from 'vue';
 import { ref } from 'vue';
 import {
     create,
@@ -12,6 +12,7 @@ import {
     index
 } from '@/actions/App/Http/Controllers/Dashboard/CategoryController';
 import Heading from '@/components/Heading.vue';
+import { DataTable } from '@/components/shared/DataTable';
 import Pagination from '@/components/shared/Pagination.vue';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -24,7 +25,6 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-import { DataTable } from '@/components/shared/DataTable';
 import { useFilters } from '@/composables/useFilters';
 
 const props = defineProps<{
