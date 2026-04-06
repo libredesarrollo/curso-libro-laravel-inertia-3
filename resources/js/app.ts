@@ -3,8 +3,11 @@ import Oruga from '@oruga-ui/oruga-next';
 import { OButton, OModal, OUpload, OInput } from "@oruga-ui/oruga-next";
 import { createApp, h } from 'vue';
 import { initializeTheme } from '@/composables/useAppearance';
+
 import AppLayout from '@/layouts/AppLayout.vue';
 import AuthLayout from '@/layouts/AuthLayout.vue';
+import WebLayout from '@/layouts/WebLayout.vue';
+
 import SettingsLayout from '@/layouts/settings/Layout.vue';
 
 
@@ -20,6 +23,11 @@ createInertiaApp({
         switch (true) {
             case name === 'Welcome':
                 return null;
+            // 2. Vistas de la Web Pública (Posts, Cursos, etc.)
+            // Si tus archivos están en 'Pages/Web/...' usa name.startsWith('Web/')
+            case name.startsWith('blog/'): 
+            case name.startsWith('contact/'): 
+                return WebLayout;
             case name.startsWith('auth/'):
                 return AuthLayout;
             case name.startsWith('settings/'):

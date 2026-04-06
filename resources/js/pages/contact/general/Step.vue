@@ -17,7 +17,7 @@
             </div>
         </div>
 
-        <contact-layout>
+        <layout>
             <ContactGeneral
                 v-if="$page.props.step == 1"
                 :errors="errors"
@@ -52,12 +52,12 @@
                     >
                 </div>
             </div>
-        </contact-layout>
+        </layout>
     </div>
 </template>
 <script setup lang="ts">
 import { usePage } from '@inertiajs/vue3';
-import ContactLayout from '@/layouts/contact/Layout.vue';
+import Layout from '@/layouts/contact/Layout.vue';
 import ContactCompany from '@/pages/contact/company/Form.vue';
 import ContactDetail from '@/pages/contact/detail/Form.vue';
 import ContactGeneral from '@/pages/contact/general/Form.vue';

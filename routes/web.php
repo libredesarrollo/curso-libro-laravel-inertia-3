@@ -42,13 +42,20 @@ Route::middleware(['auth'])->group(function () {
    // PASO POR PASO
 Route::group([
     'prefix' => 'contact',
-    // 'middleware' => 'auth',
-    // 'verified'
     ],function () {
         Route::resource('contact-general', GeneralController::class)->only(['create', 'edit', 'store', 'update']);
         Route::resource('contact-company', CompanyController::class)->only(['create','edit','store','update']);
         Route::resource('contact-person', PersonController::class)->only(['create','edit','store','update']);
         Route::resource('contact-detail', DetailController::class)->only(['create','edit','store','update']);
+});
+
+// BLOG
+Route::group([
+    'prefix' => 'blog',
+
+], function () {
+    Route::get('/', [App\Http\Controllers\Blog\PostController::class, 'index'])->name('web.index');
+    Route::get('/{post:slug}', [App\Http\Controllers\Blog\PostController::class, 'show'])->name('web.show');
 });
 
 require __DIR__.'/settings.php';
