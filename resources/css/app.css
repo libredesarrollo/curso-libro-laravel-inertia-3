@@ -7,7 +7,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-
 @theme inline {
     --font-sans:
         Instrument Sans, ui-sans-serif, system-ui, sans-serif,
@@ -169,6 +168,29 @@
     }
     body {
         @apply bg-background text-foreground;
+    }
+}
+
+/*
+CKEDITOR ESTILOS
+*/
+/* CKEDITOR */
+
+@layer components {
+    .filters-grid {
+        @apply my-3 grid grid-cols-2 gap-2;
+    }
+
+    .filter-input {
+        @apply block w-full rounded-md border border-input bg-background px-3 py-2 text-sm;
+    }
+
+    .filter-select {
+        @apply block w-full! rounded-md border border-input bg-background px-3 py-2 text-sm;
+    }
+
+    .filter-date {
+        @apply block w-full rounded-md border border-input bg-background px-3 py-2 text-sm dark:[&::-webkit-calendar-picker-indicator]:invert;
     }
 }
 

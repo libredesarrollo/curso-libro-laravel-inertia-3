@@ -10,7 +10,7 @@ import {
     ArrowLeft,
 } from 'lucide-vue-next';
 import { computed } from 'vue';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import {
     create,
     edit,
@@ -24,12 +24,21 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+
+import { useFilters } from '@/composables/useFilters';
 
 defineOptions({
     layout: {
@@ -79,46 +88,79 @@ const columns = {
     posted: 'Status',
 };
 
-const sortColumn = computed(() => props.filters?.sortColumn || 'id');
-const sortDirection = computed(() => props.filters?.sortDirection || 'desc');
+const { filters, applyFilters } = useFilters(index().url, {
+    posted: props.filters?.posted || 'all',
+    type: props.filters?.type || 'all',
+    category_id: props.filters?.category_id || 'all',
+    search: props.filters?.search || '',
+    to: props.filters?.to || '',
+    from: props.filters?.from || '',
+    sortColumn: props.filters?.sortColumn || 'id',
+    sortDirection: props.filters?.sortDirection || 'desc',
+});
 
-const posted = ref(props.filters?.posted || '');
-const type = ref(props.filters?.type || '');
-const category_id = ref(props.filters?.category_id || '');
-const search = ref(props.filters?.search || '');
-const to = ref(props.filters?.to || '');
-const from = ref(props.filters?.from || '');
+// Para el buscador con debounce
+watch(
+    () => filters.value.search,
+    () => applyFilters(),
+);
 
-function customSearch(newSortColumn?: string) {
-    const sortCol = newSortColumn || sortColumn.value;
-    const sortDir = newSortColumn
-        ? sortCol === sortColumn.value
-            ? sortDirection.value === 'asc'
-                ? 'desc'
-                : 'asc'
-            : 'asc'
-        : sortDirection.value;
+// const sortColumn = computed(() => props.filters?.sortColumn || 'id');
+// const sortDirection = computed(() => props.filters?.sortDirection || 'desc');
 
-    router.get(index().url, {
-        category_id: category_id.value,
-        type: type.value,
-        posted: posted.value,
-        search: search.value,
-        to: to.value,
-        from: from.value,
-        sortColumn: sortCol,
-        sortDirection: sortDir,
-    },
-        {
-            preserveScroll: true, // Evita que la página salte al inicio al recargar los datos
-            preserveState: true,  // Mantiene el estado de los componentes (foco, valores de inputs, etc.)
-            replace: true         // Opcional: actualiza la URL sin crear una nueva entrada en el historial
-        });
-}
+// const posted = ref(props.filters?.posted || '');
+// const type = ref(props.filters?.type || '');
+// const category_id = ref(props.filters?.category_id || '');
+// const search = ref(props.filters?.search || '');
+// const to = ref(props.filters?.to || '');
+// const from = ref(props.filters?.from || '');
 
-function handleSort(column: string) {
-    customSearch(column);
-}
+// function customSearch(newSortColumn?: string) {
+//     const sortCol = newSortColumn || sortColumn.value;
+
+//     /*
+//         ¿Existe newSortColumn? (¿El usuario hizo clic en un encabezado?)
+
+//         NO (Filtro normal): Entonces mantén la dirección que ya teníamos (sortDirection.value).
+
+//         SÍ (Clic en tabla): Pasa a la siguiente pregunta...
+
+//         ¿Es la misma columna que ya estaba activa?
+
+//         NO (Columna nueva): Por defecto, ponemos el orden en 'asc'.
+
+//         SÍ (Misma columna): Pasa a la siguiente pregunta...
+
+//         ¿Cuál era el orden actual?
+
+//         Si era 'asc', cámbialo a 'desc'.
+
+//         Si era 'desc', cámbialo a 'asc'.
+//     */
+//     const sortDir = newSortColumn // asc o desc
+//         ? (newSortColumn === sortColumn.value ? (sortDirection.value === 'asc' ? 'desc' : 'asc') : 'asc')
+//         : sortDirection.value;
+
+//     router.get(index().url, {
+//         category_id: category_id.value,
+//         type: type.value,
+//         posted: posted.value,
+//         search: search.value,
+//         to: to.value,
+//         from: from.value,
+//         sortColumn: sortCol,
+//         sortDirection: sortDir,
+//     },
+//         {
+//             preserveScroll: true, // Evita que la página salte al inicio al recargar los datos
+//             preserveState: true,  // Mantiene el estado de los componentes (foco, valores de inputs, etc.)
+//             replace: true         // Opcional: actualiza la URL sin crear una nueva entrada en el historial
+//         });
+// }
+
+// function handleSort(column: string) {
+//     customSearch(column);
+// }
 
 const typeColors: Record<string, string> = {
     post: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
@@ -126,11 +168,9 @@ const typeColors: Record<string, string> = {
     course: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400',
     movie: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
 };
-
 </script>
 
 <template>
-
     <Head title="Posts" />
 
     <div class="space-y-6 px-4 py-6">
@@ -144,46 +184,81 @@ const typeColors: Record<string, string> = {
             </Button>
         </div>
 
-        <div v-if="page.props.flash?.message"
-            class="rounded-lg bg-green-50 p-4 text-sm text-green-800 dark:bg-green-900/30 dark:text-green-400">
+        <div
+            v-if="page.props.flash?.message"
+            class="rounded-lg bg-green-50 p-4 text-sm text-green-800 dark:bg-green-900/30 dark:text-green-400"
+        >
             {{ page.props.flash.message }}
         </div>
 
-        <div class="my-3 grid grid-cols-2 gap-2">
-            <select v-model="posted" @change="customSearch()" class="block w-full">
-                <option value="">{{ 'Posted' }}</option>
-                <option value="not">{{ 'Not' }}</option>
-                <option value="yes">{{ 'Yes' }}</option>
-            </select>
-            <select v-model="type" @change="customSearch()" class="block w-full">
-                <option value="">{{ 'Type' }}</option>
-                <option value="advert">{{ 'Advert' }}</option>
-                <option value="post">{{ 'Post' }}</option>
-                <option value="course">{{ 'Course' }}</option>
-                <option value="movie">{{ 'Movie' }}</option>
-            </select>
-            <select v-model="category_id" @change="customSearch()" class="block w-full">
-                <option value="">{{ 'Category' }}</option>
-                <option v-for="cat in categories" :key="cat.id" :value="cat.id">
-                    {{ cat.title }}
-                </option>
-            </select>
-            <input v-model="search" type="search" placeholder="Search..."
-                class="block w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                @input="customSearch()" />
-            <input v-model="from" type="date" class="block w-full" />
-            <input v-model="to" type="date" class="block w-full" />
-            <Button variant="ghost" as-child class="col-span-2">
+        <div class="filters-grid" id="filters">
+            <Select v-model="filters.posted" @update:modelValue="applyFilters">
+                <SelectTrigger class="filter-select">
+                    <SelectValue placeholder="Posted" />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectItem value="all">Posted</SelectItem>
+                    <SelectItem value="not">Not</SelectItem>
+                    <SelectItem value="yes">Yes</SelectItem>
+                </SelectContent>
+            </Select>
+            <Select v-model="filters.type" @update:modelValue="applyFilters">
+                <SelectTrigger class="filter-select">
+                    <SelectValue placeholder="Type" />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectItem value="all">Type</SelectItem>
+                    <SelectItem value="advert">Advert</SelectItem>
+                    <SelectItem value="post">Post</SelectItem>
+                    <SelectItem value="course">Course</SelectItem>
+                    <SelectItem value="movie">Movie</SelectItem>
+                </SelectContent>
+            </Select>
+            <Select
+                v-model="filters.category_id"
+                @update:modelValue="applyFilters"
+            >
+                <SelectTrigger class="filter-select">
+                    <SelectValue placeholder="Category" />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectItem value="all">Category</SelectItem>
+                    <SelectItem
+                        v-for="cat in categories"
+                        :key="cat.id"
+                        :value="cat.id"
+                    >
+                        {{ cat.title }}
+                    </SelectItem>
+                </SelectContent>
+            </Select>
+            <input
+                v-model="filters.search"
+                type="search"
+                placeholder="Search..."
+                class="filter-input"
+                @input="applyFilters()"
+            />
+            <input v-model="filters.from" type="date" class="filter-date" />
+            <input v-model="filters.to" type="date" class="filter-date" />
+            <div>
+                <Button variant="ghost" as-child >
                 <Link :href="index().url">
                     <ArrowLeft class="mr-2 h-4 w-4" />
                     Clear
                 </Link>
             </Button>
+            </div>
         </div>
 
         <Card class="overflow-hidden">
-            <DataTable :columns="columns" :data="posts.data" :sort-column="sortColumn" :sort-direction="sortDirection"
-                @sort="handleSort">
+            <DataTable
+                :columns="columns"
+                :data="posts.data"
+                :sort-column="filters.sortColumn"
+                :sort-direction="filters.sortDirection"
+                @sort="applyFilters"
+            >
                 <template #default="{ row }">
                     <td class="px-4 py-3">{{ row.id }}</td>
                     <td class="px-4 py-3">
@@ -193,7 +268,9 @@ const typeColors: Record<string, string> = {
                                 <p class="text-sm font-medium">
                                     {{ row.title }}
                                 </p>
-                                <p class="font-mono text-xs text-muted-foreground">
+                                <p
+                                    class="font-mono text-xs text-muted-foreground"
+                                >
                                     {{ row.slug }}
                                 </p>
                             </div>
@@ -203,7 +280,7 @@ const typeColors: Record<string, string> = {
                     <td class="px-4 py-3 text-sm">
                         <Badge variant="outline">{{
                             row.category?.title || 'Uncategorized'
-                            }}</Badge>
+                        }}</Badge>
                     </td>
                     <td class="px-4 py-3 text-sm">
                         <Badge :class="typeColors[row.type as string] || ''">
@@ -211,30 +288,47 @@ const typeColors: Record<string, string> = {
                         </Badge>
                     </td>
                     <td class="px-4 py-3 text-sm">
-                        <Badge :variant="row.posted === 'yes' ? 'default' : 'secondary'
-                            ">
+                        <Badge
+                            :variant="
+                                row.posted === 'yes' ? 'default' : 'secondary'
+                            "
+                        >
                             {{ row.posted === 'yes' ? 'Posted' : 'Draft' }}
                         </Badge>
                     </td>
                     <td class="px-4 py-3 text-right">
                         <DropdownMenu>
                             <DropdownMenuTrigger as-child>
-                                <Button variant="ghost" size="icon" class="h-8 w-8">
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    class="h-8 w-8"
+                                >
                                     <MoreHorizontal class="h-4 w-4" />
                                     <span class="sr-only">Open menu</span>
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" class="w-[160px]">
                                 <DropdownMenuItem as-child>
-                                    <Link :href="edit(row.id).url" class="cursor-pointer">
+                                    <Link
+                                        :href="edit(row.id).url"
+                                        class="cursor-pointer"
+                                    >
                                         <Pencil class="mr-2 h-4 w-4" />
                                         Edit
                                     </Link>
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
-                                <Form v-bind="destroy.form(row.id)" v-slot="{ processing }">
-                                    <DropdownMenuItem class="cursor-pointer text-destructive focus:text-destructive"
-                                        :disabled="processing" as="button" type="submit">
+                                <Form
+                                    v-bind="destroy.form(row.id)"
+                                    v-slot="{ processing }"
+                                >
+                                    <DropdownMenuItem
+                                        class="cursor-pointer text-destructive focus:text-destructive"
+                                        :disabled="processing"
+                                        as="button"
+                                        type="submit"
+                                    >
                                         <Trash2 class="mr-2 h-4 w-4" />
                                         Delete
                                     </DropdownMenuItem>

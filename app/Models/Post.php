@@ -28,7 +28,7 @@ class Post extends Model
         return URL::asset('images/post/'.$this->image);
     }
 
-    public function scopeFilterDataTable($query, array $filters)
+  public function scopeFilterDataTable($query, array $filters)
     {
         $query
             ->when($filters['type'] ?? null, fn ($q, $type) => $q->where('type', $type))
