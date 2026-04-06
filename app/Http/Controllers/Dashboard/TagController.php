@@ -11,9 +11,14 @@ class TagController extends Controller
 {
     public function index()
     {
-        $tags = Tag::paginate(15);
+        $tags = Tag::filterDataTable(request()->only(['search', 'sortColumn', 'sortDirection']))
+            ->paginate(15)
+            ->withQueryString();
 
-        return inertia('dashboard/tag/Index', compact('tags'));
+        return inertia('dashboard/tag/Index', [
+            'tags' => $tags,
+            'filters' => request()->only(['search', 'sortColumn', 'sortDirection']),
+        ]);
     }
 
     public function create()

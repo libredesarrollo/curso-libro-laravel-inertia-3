@@ -1,21 +1,23 @@
 <script setup lang="ts">
-import { Head, Form, usePage } from '@inertiajs/vue3';
+import { watch, ref } from 'vue';
+import { Head, router, usePage } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
 import {
     MoreHorizontal,
     Plus,
     Pencil,
     Trash2,
-    Tag as TagIcon,
+    ArrowLeft,
+    Tag as TagIcon
 } from 'lucide-vue-next';
 import {
     create,
     edit,
     destroy,
+    index,
 } from '@/actions/App/Http/Controllers/Dashboard/TagController';
 import Heading from '@/components/Heading.vue';
 import Pagination from '@/components/shared/Pagination.vue';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import {
@@ -25,35 +27,79 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-
-defineProps<{
-    tags: {
-        data: Array<{
-            id: number;
-            title: string;
-            slug: string;
-            posts_count: number;
-        }>;
-        links: Array<{ url: string | null; label: string; active: boolean }>;
-    };
-}>();
-
-const page = usePage();
+import { DataTable } from '@/components/shared/DataTable';
+import { useFilters } from '@/composables/useFilters';
 
 defineOptions({
     layout: {
         breadcrumbs: [
             {
-                title: 'List'
-            }
+                title: 'List',
+            },
         ],
     },
 });
 
+const props = defineProps<{
+    tags: {
+        data: Array<{
+            id: number;
+            title: string;
+            slug: string;
+        }>;
+        links: Array<{ url: string | null; label: string; active: boolean }>;
+    };
+    filters?: {
+        search?: string;
+        sortColumn?: string;
+        sortDirection?: 'asc' | 'desc';
+    };
+}>();
+
+const page = usePage();
+
+const confirmDeleteActive = ref(false);
+const deleteTagRow = ref<number | string>('');
+
+const columns = {
+    id: 'Id',
+    title: 'Title',
+};
+
+const { filters, applyFilters } = useFilters(index().url, {
+    search: props.filters?.search || '',
+    sortColumn: props.filters?.sortColumn || 'id',
+    sortDirection: props.filters?.sortDirection || 'desc',
+});
+
+watch(
+    () => filters.value.search,
+    () => applyFilters(),
+);
+
+const deleteTag = () => {
+    router.delete(destroy(deleteTagRow.value).url, {
+        preserveScroll: true,
+        onSuccess: () => {
+            confirmDeleteActive.value = false;
+            deleteTagRow.value = '';
+        },
+    });
+};
 </script>
 
 <template>
     <Head title="Tags" />
+
+    <o-modal v-model:active="confirmDeleteActive">
+        <p class="p-4 text-black">
+            Are you sure you want to delete the selected record?
+        </p>
+        <div class="flex flex-row-reverse gap-2 bg-gray-100 p-3">
+            <o-button variant="danger" @click="deleteTag">Delete</o-button>
+            <o-button @click="confirmDeleteActive = false">Cancel</o-button>
+        </div>
+    </o-modal>
 
     <div class="space-y-6 px-4 py-6">
         <div class="flex items-center justify-between">
@@ -73,107 +119,96 @@ defineOptions({
             {{ page.props.flash.message }}
         </div>
 
+        <div class="filters-grid" id="filters">
+            <input
+                v-model="filters.search"
+                type="search"
+                placeholder="Search..."
+                class="filter-input"
+                @input="applyFilters()"
+            />
+            <div>
+                <Button variant="ghost" as-child>
+                    <Link :href="index().url">
+                        <ArrowLeft class="mr-2 h-4 w-4" />
+                        Clear
+                    </Link>
+                </Button>
+            </div>
+        </div>
+
         <Card class="overflow-hidden">
             <div class="overflow-x-auto">
-                <table class="w-full">
-                    <thead class="border-b bg-muted/50">
-                        <tr>
-                            <th
-                                class="px-4 py-3 text-left text-sm font-medium text-muted-foreground"
-                            >
-                                Title
-                            </th>
-                            <th
-                                class="px-4 py-3 text-left text-sm font-medium text-muted-foreground"
-                            >
-                                Slug
-                            </th>
-                           
-                            <th
-                                class="px-4 py-3 text-right text-sm font-medium text-muted-foreground"
-                            >
-                                Actions
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y">
-                        <tr
-                            v-for="tag in tags.data"
-                            :key="tag.id"
-                            class="transition-colors hover:bg-muted/30"
-                        >
-                            <td class="px-4 py-3">
-                                <div class="flex items-center gap-3">
-                                    <TagIcon
-                                        class="h-4 w-4 text-muted-foreground"
-                                    />
-                                    <span class="text-sm font-medium">{{
-                                        tag.title
-                                    }}</span>
-                                </div>
-                            </td>
-                            <td
-                                class="px-4 py-3 font-mono text-sm text-muted-foreground"
-                            >
-                                {{ tag.slug }}
-                            </td>
-                           
-                            <td class="px-4 py-3 text-right">
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger as-child>
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            class="h-8 w-8"
-                                        >
-                                            <MoreHorizontal class="h-4 w-4" />
-                                            <span class="sr-only"
-                                                >Open menu</span
-                                            >
-                                        </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent
-                                        align="end"
-                                        class="w-[160px]"
+                <DataTable
+                    :columns="columns"
+                    :data="tags.data"
+                    :sort-column="filters.sortColumn"
+                    :sort-direction="filters.sortDirection"
+                    @sort="applyFilters"
+                >
+                    <template #default="{ row }">
+                        <td class="px-4 py-3">{{ row.id }}</td>
+                        <td class="px-4 py-3">
+                            <div class="flex items-center gap-3">
+                                <TagIcon
+                                    class="h-4 w-4 text-muted-foreground"
+                                />
+                                <div>
+                                    <p class="text-sm font-medium">
+                                        {{ row.title }}
+                                    </p>
+                                    <p
+                                        class="font-mono text-xs text-muted-foreground"
                                     >
-                                        <DropdownMenuItem as-child>
-                                            <Link
-                                                :href="edit(tag.id).url"
-                                                class="cursor-pointer"
-                                            >
-                                                <Pencil class="mr-2 h-4 w-4" />
-                                                Edit
-                                            </Link>
-                                        </DropdownMenuItem>
-                                        <DropdownMenuSeparator />
-                                        <Form
-                                            v-bind="destroy.form(tag.id)"
-                                            v-slot="{ processing }"
+                                        {{ row.slug }}
+                                    </p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-4 py-3 text-right">
+                            <DropdownMenu>
+                                <DropdownMenuTrigger as-child>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        class="h-8 w-8"
+                                    >
+                                        <MoreHorizontal class="h-4 w-4" />
+                                        <span class="sr-only">Open menu</span>
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent
+                                    align="end"
+                                    class="w-[160px]"
+                                >
+                                    <DropdownMenuItem as-child>
+                                        <Link
+                                            :href="edit(row.id).url"
+                                            class="cursor-pointer"
                                         >
-                                            <DropdownMenuItem
-                                                class="cursor-pointer text-destructive focus:text-destructive"
-                                                :disabled="processing"
-                                                as="button"
-                                                type="submit"
-                                            >
-                                                <Trash2 class="mr-2 h-4 w-4" />
-                                                Delete
-                                            </DropdownMenuItem>
-                                        </Form>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </td>
-                        </tr>
-                        <tr v-if="tags.data.length === 0">
-                            <td
-                                colspan="4"
-                                class="px-4 py-8 text-center text-sm text-muted-foreground"
-                            >
-                                No tags found. Create your first one.
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                                            <Pencil class="mr-2 h-4 w-4" />
+                                            Edit
+                                        </Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem as-child>
+                                        <Button
+                                            variant="destructive"
+                                            @click="
+                                                confirmDeleteActive = true;
+                                                deleteTagRow = row.id;
+                                            "
+                                            class="w-full"
+                                        >
+                                            <Trash2 class="mr-2 h-4 w-4" />
+                                            Delete
+                                        </Button>
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </td>
+                    </template>
+                </DataTable>
             </div>
         </Card>
 
