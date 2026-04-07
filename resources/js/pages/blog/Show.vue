@@ -68,6 +68,7 @@ const page = usePage();
                             <div 
                                 class="mycard-primary mb-5 block max-w-96 border-l-4 border-primary" 
                                  v-if="!page.props.cart[post.id]">
+                                 
                                 <div class="mycard-body p-4">
                                     <h3 class="text-xl mb-3 font-semibold">Añadir este artículo</h3>
                                     <CartItem :post="post" />

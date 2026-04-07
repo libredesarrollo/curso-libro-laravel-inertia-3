@@ -31,9 +31,14 @@ const confirmDeleteActive = ref(false);
 const deleteTodoRow = ref<number | string>('');
 const todoListRef = ref<HTMLElement | null>(null);
 
+// Custom notification
+import { useNotification } from '@/composables/useNotification';
+
 const form = useForm({
     name: '',
 });
+
+const { add } = useNotification();
 
 onMounted(() => {
     nextTick(() => {
@@ -66,6 +71,7 @@ const create = () => {
     form.post(store().url, {
         onSuccess: () => {
             form.reset();
+            add('Todo created', 'success');
         },
     });
 };
@@ -76,6 +82,11 @@ const update = (todo: any) => {
     // Usamos todoUpdate(id).url e inyectamos los datos en el segundo parámetro
     router.put(todoUpdate(todo.id).url, {
         name: todo.name,
+    }, {
+        onSuccess: () => {
+            form.reset();
+            add('Todo updated', 'success');
+        },
     });
 };
 
@@ -84,6 +95,11 @@ const remove = () => {
     // Usamos destroy(id).url
     router.delete(destroy(deleteTodoRow.value).url, {
         preserveScroll: true,
+    
+        onSuccess: () => {
+            form.reset();
+            add('Todo deleted', 'success');
+        },
     });
 };
 

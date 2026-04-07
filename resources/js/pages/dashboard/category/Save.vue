@@ -26,7 +26,7 @@ defineProps<{
 
 <template>
     <Head :title="category.id ? 'Edit Category' : 'Create Category'" />
-    {{  $page }}
+
     <div class="mx-auto max-w-2xl space-y-6">
         <div class="flex items-center gap-4">
             <Button variant="ghost" size="sm" as-child>
