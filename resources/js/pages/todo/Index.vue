@@ -136,7 +136,9 @@ onFinish: () => {
 }
     });
 };
+// // *** Actualizaciones normales
 // const status = (todo: any) => {
+//     // Actualiza ANTES de hacer los cambios en el servidor, pero, si hay problemas en el servidor NO revierte
 //     // todo.status = todo.status == '1' ? '0' : '1';
 //     // Usamos todoStatus(id).url
 //     router.post(todoStatus(todo.id).url, {
@@ -154,6 +156,7 @@ onFinish: () => {
 //             },
 //             onSuccess: () => {
 //                 // Revertir loaders si tuvieras
+//                 // Actualiza AL APLICAR los cambios en el servidor (Mas lento)
 //                 todo.status = todo.status == '1' ? '0' : '1';
 //             }
 //         },

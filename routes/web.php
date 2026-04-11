@@ -55,6 +55,8 @@ Route::group([
 ], function () {
     Route::get('/', [App\Http\Controllers\Blog\PostController::class, 'index'])->name('web.index');
     Route::get('/{post:slug}', [App\Http\Controllers\Blog\PostController::class, 'show'])->name('web.show');
+    // POSTS - Infinite Scroll Demo
+Route::get('/infinite-scroll/posts', [App\Http\Controllers\PostController::class, 'index'])->name('posts.index');
 });
 
 // SHOP
@@ -80,5 +82,7 @@ Route::middleware(
     Route::post('/status/{todo}', [App\Http\Controllers\TodoController::class, 'status'])->name('todo.status');
     Route::post('/order', [App\Http\Controllers\TodoController::class, 'order'])->name('todo.order');
 });
+
+
 
 require __DIR__.'/settings.php';
