@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Todo;
 use Illuminate\Http\Request;
 
+use Illuminate\Validation\ValidationException;
+
 class TodoController extends Controller
 {
     function index()
@@ -54,6 +56,18 @@ class TodoController extends Controller
     }
     function status(Todo $todo)
     {
+         sleep(2);
+        $randomError = rand(1, 10) <= 7;
+        if ($randomError) {
+            // abort(422, 'Random error occurred - optimistic update will rollback');
+            // return response()->json([
+            //     'message' => 'Random error occurred - optimistic update will rollback'
+            // ], 422);
+            // // Esto envía el error de vuelta a Inertia correctamente
+            throw ValidationException::withMessages([
+            'status' => 'Random error occurred - optimistic update will rollback',
+        ]);
+        }
         Todo::where("id", $todo->id)->where("user_id", auth()->id())->update([
             'status' => request('status') == '1'
         ]);
