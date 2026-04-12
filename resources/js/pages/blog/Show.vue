@@ -95,8 +95,9 @@ const page = usePage();
 
                     </div>
             </div>
-            {{ $page }}
-            <GeneralStep :errors="errors" :contactGeneral="contactGeneral" />
+   
+            <!-- El prop page NO es recibido -->
+            <!-- <GeneralStep :errors="errors" :contactGeneral="contactGeneral" /> -->
         </div>
     </WebLayout>
 </template>

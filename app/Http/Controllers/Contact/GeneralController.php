@@ -12,7 +12,6 @@ class GeneralController extends Controller
 {
    public function create()
     {
-       
         Inertia::share('step', getStep());
         return inertia("contact/general/Step");
     }
