@@ -7,20 +7,33 @@ import CartItem from '@/fragment/CartItem.vue';
 import { usePage } from '@inertiajs/vue3';
 
 // 1. Definición de props con tipos
-defineProps<{
-    post: {
-        id: number;
-        title: string;
-        image?: string;
-        date: string;
-        text: string;
-        type: string;
-        category: {
+const props = withDefaults(
+    defineProps<{
+        post: {
+            id: number;
             title: string;
+            image?: string;
+            date: string;
+            text: string;
+            type: string;
+            category: {
+                title: string;
+            };
         };
-    };
-    errors: Record<string, any>;
-}>();
+        errors?: Record<string, any>; // Marcado como opcional con ?
+        contactGeneral?: {
+            // Objeto opcional
+            id: string;
+            subject: string;
+            type: string;
+            message: string;
+        };
+    }>(), 
+    {
+        // Definimos el valor por defecto como un objeto vacío
+        errors: () => ({}) 
+    }
+);
 
 const page = usePage();
 
@@ -82,6 +95,8 @@ const page = usePage();
 
                     </div>
             </div>
+            {{ $page }}
+            <GeneralStep :errors="errors" :contactGeneral="contactGeneral" />
         </div>
     </WebLayout>
 </template>

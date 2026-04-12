@@ -19,7 +19,7 @@
 
         <layout>
             <ContactGeneral
-                v-if="$page.props.step == 1"
+                v-if="!$page.props.step || $page.props.step == 1"
                 :errors="errors"
                 :contactGeneral="contactGeneral"
             />

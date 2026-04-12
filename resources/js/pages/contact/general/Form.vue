@@ -25,6 +25,9 @@ const form = useForm({
     subject: props.contactGeneral?.subject,
     type: props.contactGeneral?.type,
     message: props.contactGeneral?.message,
+},{
+    preserveScroll: true, // Evita que la página salte al inicio al recargar los datos
+    preserveState: true,  // Mantiene el estado de los componentes (foco, valores de inputs, etc.)
 });
 
 function submit() {

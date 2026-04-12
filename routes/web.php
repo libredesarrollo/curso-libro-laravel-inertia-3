@@ -56,7 +56,7 @@ Route::group([
     Route::get('/', [App\Http\Controllers\Blog\PostController::class, 'index'])->name('web.index');
     Route::get('/{post:slug}', [App\Http\Controllers\Blog\PostController::class, 'show'])->name('web.show');
     // POSTS - Infinite Scroll Demo
-Route::get('/infinite-scroll/posts', [App\Http\Controllers\PostController::class, 'index'])->name('posts.index');
+Route::get('/infinite-scroll/posts', [App\Http\Controllers\Blog\PostController::class, 'indexinfinitescroll'])->name('posts.index');
 });
 
 // SHOP

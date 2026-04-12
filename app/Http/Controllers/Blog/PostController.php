@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class PostController extends Controller
 {
@@ -28,5 +29,12 @@ class PostController extends Controller
     {
         $post->category;
         return inertia('blog/Show', compact('post'));
+    }
+
+    public function indexinfinitescroll()
+    {
+        return Inertia::render('blog/infinitescroll/Index', [
+            'posts' => Inertia::scroll(fn () => Post::with('category')->latest()->paginate(10)),
+        ]);
     }
 }
