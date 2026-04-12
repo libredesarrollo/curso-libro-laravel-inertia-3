@@ -7,7 +7,7 @@ import {
     OInput,
     ONotification,
 } from '@oruga-ui/oruga-next';
-import { createApp, h, onMounted, ref } from 'vue';
+import { createApp, h, createSSRApp } from 'vue';
 import { initializeTheme } from '@/composables/useAppearance';
 
 import AppLayout from '@/layouts/AppLayout.vue';
@@ -48,7 +48,8 @@ createInertiaApp({
         showSpinner: true,
     },
     setup({ el, App, props, plugin }) {
-        const app = createApp({ render: () => h(App, props) });
+        // USAMOS createSSRApp para que sea compatible con el servidor
+        const app = createSSRApp({ render: () => h(App, props) });
 
         app.use(plugin);
         app.use(Oruga);
@@ -59,8 +60,31 @@ createInertiaApp({
         app.component('o-input', OInput);
         app.component('o-notification', ONotification);
 
-        app.mount(el as Element);
+        if (el) {
+            app.mount(el);
+        }
+        
+        // Es vital retornar la app para que el motor de SSR pueda usarla
+        return app; 
     },
+    // setup({ el, App, props, plugin }) {
+    //     const app = createApp({ render: () => h(App, props) });
+
+    //     app.use(plugin);
+    //     app.use(Oruga);
+
+    //     app.component('o-button', OButton);
+    //     app.component('o-modal', OModal);
+    //     app.component('o-upload', OUpload);
+    //     app.component('o-input', OInput);
+    //     app.component('o-notification', ONotification);
+
+    //     // Solo montar si estamos en el navegador
+    //     if (el) {
+    //         app.mount(el);
+    //         // app.mount(el as Element);
+    //     }
+    // },
 });
 
 // This will set light / dark mode on page load...

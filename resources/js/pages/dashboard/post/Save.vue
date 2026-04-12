@@ -1,20 +1,20 @@
 <script setup lang="ts">
-import { Ckeditor } from '@ckeditor/ckeditor5-vue';
+// import { Ckeditor } from '@ckeditor/ckeditor5-vue';
 
 
 import { Head, Form, Link, router } from '@inertiajs/vue3';
-import {
-    ClassicEditor,
-    Bold,
-    Essentials,
-    Italic,
-    Mention,
-    Paragraph,
-    Undo,
-    Heading as CHeading,
-} from 'ckeditor5';
+// import {
+//     ClassicEditor,
+//     Bold,
+//     Essentials,
+//     Italic,
+//     Mention,
+//     Paragraph,
+//     Undo,
+//     Heading as CHeading,
+// } from 'ckeditor5';
 import { ArrowLeft, Save, Upload, Download, Trash } from 'lucide-vue-next';
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted, defineAsyncComponent } from 'vue';
 import {
     update,
     store,
@@ -75,12 +75,39 @@ defineOptions({
     },
 });
 
-const editor = ClassicEditor;
+// // 2. Crea el componente dinámico (solo se cargará en el navegador)
+// const Ckeditor = defineAsyncComponent(() => 
+//     import('@ckeditor/ckeditor5-vue').then(m => m.Ckeditor)
+// );
+
+// Importamos el componente de forma que no bloquee el SSR
+const Ckeditor = defineAsyncComponent({
+  loader: () => import('@ckeditor/ckeditor5-vue').then(m => m.Ckeditor),
+  // No pongas un componente de carga aquí si este también usa APIs del navegador
+});
+
+// ... resto de tus imports de lucide, ui, etc ...
+
+// 3. Los plugins de CKEditor también pueden causar problemas en SSR si se ejecutan al inicio.
+// Vamos a envolver la lógica del editor en una referencia que se active al montar.
+const isClient = ref(false);
+const editor = ref();
 const editorConfig = {
     licenseKey: 'GPL',
-    plugins: [Bold, Essentials, Italic, Mention, Paragraph, Undo, CHeading],
-    toolbar: ['undo', 'redo', '|', 'bold', 'italic', 'heading'],
+    // Plugins e imports de ckeditor5...
 };
+
+onMounted(async () => {
+    // Importamos el motor del editor solo en el cliente
+    const { ClassicEditor, Bold, Essentials, Italic, Mention, Paragraph, Undo, Heading: CHeading } = await import('ckeditor5');
+    
+    editor.value = ClassicEditor;
+    editorConfig.plugins = [Bold, Essentials, Italic, Mention, Paragraph, Undo, CHeading];
+    editorConfig.toolbar = ['undo', 'redo', '|', 'bold', 'italic', 'heading'];
+    
+    isClient.value = true; // Ya podemos mostrar el editor
+});
+
 
 function uploadImage() {
     // Verificamos que exista un ID y una imagen antes de intentar subir
@@ -187,8 +214,16 @@ watch(() => dropFiles.value, (newFiles) => {
 
                     <div class="space-y-2">
                         <Label for="text"> Content </Label>
-                        <ckeditor v-model="post.text" :editor="editor" :config="editorConfig" />
-                        <textarea id="text" name="text" v-model="post.text" rows="6"
+                        <template v-if="isClient">
+                            <component 
+                                :is="Ckeditor"
+                                v-model="post.text" 
+                                :editor="editor" 
+                                :config="editorConfig" 
+                            />
+                        </template>
+                        <!-- <ckeditor v-if="isClient" v-model="post.text" :editor="editor" :config="editorConfig" /> -->
+                        <textarea v-else id="text" name="text" v-model="post.text" rows="6"
                             class="flex w-full resize-none rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"></textarea>
                         <InputError :message="errors.text" />
                     </div>
