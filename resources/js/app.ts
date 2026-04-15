@@ -26,8 +26,6 @@ createInertiaApp({
         switch (true) {
             case name === 'Welcome':
                 return null;
-            // 2. Vistas de la Web Pública (Posts, Cursos, etc.)
-            // Si tus archivos están en 'Pages/Web/...' usa name.startsWith('Web/')
             case name.startsWith('blog/'):
             case name.startsWith('contact/'):
             case name.startsWith('shop/'):
@@ -41,6 +39,14 @@ createInertiaApp({
             default:
                 return AppLayout;
         }
+    },
+    // defaults: {
+    //     visitOptions: () => ({ viewTransition: true }) as any,
+    // } as any,
+    defaults: {
+        visitOptions: (href, options) => {
+            return { viewTransition: true };
+        },
     },
     progress: {
         color: '#F00',
@@ -63,9 +69,9 @@ createInertiaApp({
         if (el) {
             app.mount(el);
         }
-        
+
         // Es vital retornar la app para que el motor de SSR pueda usarla
-        return app; 
+        return app;
     },
     // setup({ el, App, props, plugin }) {
     //     const app = createApp({ render: () => h(App, props) });
