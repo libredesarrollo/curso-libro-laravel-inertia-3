@@ -37,7 +37,9 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 
+import ConfirmDeleteModal from '@/components/ConfirmDeleteModal.vue';
 import { useFilters } from '@/composables/useFilters';
+import { ref } from 'vue';
 
 defineOptions({
     layout: {
@@ -97,6 +99,14 @@ const { filters, applyFilters } = useFilters(index().url, {
     sortColumn: props.filters?.sortColumn || 'id',
     sortDirection: props.filters?.sortDirection || 'desc',
 });
+
+const deleteModalOpen = ref(false);
+const postToDelete = ref<{ id: number; title: string } | null>(null);
+
+const openDeleteModal = (post: { id: number; title: string }) => {
+    postToDelete.value = post;
+    deleteModalOpen.value = true;
+};
 
 // Para el buscador con debounce
 watch(
@@ -184,12 +194,12 @@ const typeColors: Record<string, string> = {
             <input v-model="filters.from" type="date" class="filter-date" />
             <input v-model="filters.to" type="date" class="filter-date" />
             <div>
-                <Button variant="ghost" as-child >
-                <Link :href="index().url">
-                    <ArrowLeft class="mr-2 h-4 w-4" />
-                    Clear
-                </Link>
-            </Button>
+                <Button variant="ghost" as-child>
+                    <Link :href="index().url">
+                        <ArrowLeft class="mr-2 h-4 w-4" />
+                        Clear
+                    </Link>
+                </Button>
             </div>
         </div>
 
@@ -261,20 +271,18 @@ const typeColors: Record<string, string> = {
                                     </Link>
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
-                                <Form
-                                    v-bind="destroy.form(row.id)"
-                                    v-slot="{ processing }"
+                                <DropdownMenuItem
+                                    class="cursor-pointer text-destructive focus:text-destructive"
+                                    @click="
+                                        openDeleteModal({
+                                            id: row.id,
+                                            title: row.title,
+                                        })
+                                    "
                                 >
-                                    <DropdownMenuItem
-                                        class="cursor-pointer text-destructive focus:text-destructive"
-                                        :disabled="processing"
-                                        as="button"
-                                        type="submit"
-                                    >
-                                        <Trash2 class="mr-2 h-4 w-4" />
-                                        Delete
-                                    </DropdownMenuItem>
-                                </Form>
+                                    <Trash2 class="mr-2 h-4 w-4" />
+                                    Delete
+                                </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </td>
@@ -283,5 +291,15 @@ const typeColors: Record<string, string> = {
         </Card>
 
         <Pagination v-if="posts.data.length > 0" :links="posts.links" />
+
+        <ConfirmDeleteModal
+            v-if="postToDelete"
+            :open="deleteModalOpen"
+            :title="postToDelete.title"
+            :item-name="postToDelete.title"
+            item-label="post"
+            :delete-route="destroy.form(postToDelete.id)"
+            @update:open="deleteModalOpen = $event"
+        />
     </div>
 </template>
