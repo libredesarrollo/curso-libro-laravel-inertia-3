@@ -33,10 +33,14 @@ const form = useForm({
 });
 
 function submit() {
+    const options = {
+        preserveScroll: true,
+        preserveState: true,
+    };
     if (!form.id) {
-        form.post(store().url);
+        form.post(store().url, options);
     } else {
-        form.put(update(form.id).url);
+        form.put(update(form.id).url, options);
     }
 }
 </script>
@@ -47,17 +51,17 @@ function submit() {
             <div class="form-field">
                 <Label>Name</Label>
                 <Input id="name" v-model="form.name" type="text" autofocus />
-                <InputError :message="errors?.name" class="mt-2" />
+                <InputError :message="form.errors.name" class="mt-2" />
             </div>
             <div class="form-field">
                 <Label>Surname</Label>
                 <Input id="surname" v-model="form.surname" type="text" />
-                <InputError :message="errors?.surname" class="mt-2" />
+                <InputError :message="form.errors.surname" class="mt-2" />
             </div>
             <div class="form-field">
                 <Label>Other</Label>
                 <textarea v-model="form.other" class="form-textarea"></textarea>
-                <InputError :message="errors?.other" class="mt-2" />
+                <InputError :message="form.errors.other" class="mt-2" />
             </div>
             <div class="form-field">
                 <Label>Choices</Label>
@@ -68,7 +72,7 @@ function submit() {
                     <option value="movie">Movie</option>
                     <option value="other">Other</option>
                 </select>
-                <InputError :message="errors?.choices" class="mt-2" />
+                <InputError :message="form.errors.choices" class="mt-2" />
             </div>
             <div class="form-actions">
                 <Button

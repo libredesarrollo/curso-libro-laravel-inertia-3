@@ -25,16 +25,18 @@ const form = useForm({
     subject: props.contactGeneral?.subject,
     type: props.contactGeneral?.type,
     message: props.contactGeneral?.message,
-},{
-    preserveScroll: true, // Evita que la página salte al inicio al recargar los datos
-    preserveState: true,  // Mantiene el estado de los componentes (foco, valores de inputs, etc.)
 });
 
 function submit() {
+    const options = {
+        preserveScroll: true,
+        preserveState: true,
+    };
+
     if (!form.id) {
-        form.post(store().url);
+        form.post(store().url, options);
     } else {
-        form.put(update(form.id).url);
+        form.put(update(form.id).url, options);
     }
 }
 </script>
@@ -50,7 +52,8 @@ function submit() {
                     type="text"
                     autofocus
                 />
-                <InputError :message="errors?.subject" class="mt-2" />
+                <!-- <InputError :message="errors?.subject" class="mt-2" /> -->
+                <InputError :message="form.errors.subject" class="mt-2" />
             </div>
             <div class="form-field">
                 <Label>Message</Label>
@@ -58,7 +61,7 @@ function submit() {
                     v-model="form.message"
                     class="form-textarea"
                 ></textarea>
-                <InputError :message="errors?.message" class="mt-2" />
+                <InputError :message="form.errors.message" class="mt-2" />
             </div>
             <div class="form-field">
                 <Label>Type</Label>
@@ -66,7 +69,7 @@ function submit() {
                     <option value="company">Company</option>
                     <option value="person">Person</option>
                 </select>
-                <InputError :message="errors?.type" class="mt-2" />
+                <InputError :message="form.errors.type" class="mt-2" />
             </div>
 
             <div class="form-actions">
@@ -80,3 +83,4 @@ function submit() {
         </form>
     </Layout>
 </template>
+

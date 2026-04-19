@@ -35,10 +35,14 @@ const form = useForm({
 });
 
 function submit() {
+    const options = {
+        preserveScroll: true,
+        preserveState: true,
+    };
     if (!form.id) {
-        form.post(store().url);
+        form.post(store().url, options);
     } else {
-        form.put(update(form.id).url);
+        form.put(update(form.id).url, options);
     }
 }
 </script>
@@ -49,7 +53,7 @@ function submit() {
             <div class="form-field">
                 <Label>Name</Label>
                 <Input id="name" v-model="form.name" type="text" autofocus />
-                <InputError :message="errors?.name" class="mt-2" />
+                <InputError :message="form.errors.name" class="mt-2" />
             </div>
             <div class="form-field">
                 <Label>Identification</Label>
@@ -58,17 +62,17 @@ function submit() {
                     v-model="form.identification"
                     type="text"
                 />
-                <InputError :message="errors?.identification" class="mt-2" />
+                <InputError :message="form.errors.identification" class="mt-2" />
             </div>
             <div class="form-field">
                 <Label>Email</Label>
                 <Input id="email" v-model="form.email" type="email" />
-                <InputError :message="errors?.email" class="mt-2" />
+                <InputError :message="form.errors.email" class="mt-2" />
             </div>
             <div class="form-field">
                 <Label>Extra</Label>
                 <textarea v-model="form.extra" class="form-textarea"></textarea>
-                <InputError :message="errors?.extra" class="mt-2" />
+                <InputError :message="form.errors.extra" class="mt-2" />
             </div>
             <div class="form-field">
                 <Label>Choices</Label>
@@ -79,7 +83,7 @@ function submit() {
                     <option value="movie">Movie</option>
                     <option value="other">Other</option>
                 </select>
-                <InputError :message="errors?.type" class="mt-2" />
+                <InputError :message="form.errors.choices" class="mt-2" />
             </div>
             <div class="form-actions">
                 <Button

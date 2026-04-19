@@ -32,10 +32,14 @@ const form = useForm({
 });
 
 function submit() {
+    const options = {
+        preserveScroll: true,
+        preserveState: true,
+    };
     if (!form.id) {
-        form.post(store().url);
+        form.post(store().url, options);
     } else {
-        form.put(update(form.id).url);
+        form.put(update(form.id).url, options);
     }
 }
 </script>
@@ -46,7 +50,8 @@ function submit() {
             <div class="form-field">
                 <Label>Extra</Label>
                 <textarea v-model="form.extra" class="form-textarea"></textarea>
-                <InputError :message="errors?.extra" class="mt-2" />
+                <!-- <InputError :message="errors?.extra" class="mt-2" /> -->
+                <InputError :message="form.errors.extra" class="mt-2" />
             </div>
             <div class="form-actions">
                 <Button
