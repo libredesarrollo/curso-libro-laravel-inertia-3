@@ -10,7 +10,7 @@ import Layout from '@/layouts/contact/Layout.vue';
 import { store, update } from '@/routes/contact-general';
 
 const props = defineProps<{
-    errors: object;
+    // errors: object; // USAMOS desde el form. definido abajo
     contactGeneral?: {
         // Objeto opcional
         id: string;

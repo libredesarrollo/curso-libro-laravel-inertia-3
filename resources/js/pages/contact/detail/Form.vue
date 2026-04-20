@@ -15,7 +15,7 @@ import Layout from '@/layouts/contact/Layout.vue';
 declare function route(name: string, params?: Record<string, unknown>): string;
 
 const props = defineProps<{
-    errors: Record<string, string>;
+    // errors: Record<string, string>; // USAMOS desde el form. definido abajo
     contactGeneralId?: number;
     contactDetail?: {
         id: string;

@@ -10,7 +10,7 @@ import Layout from '@/layouts/contact/Layout.vue';
 import { store, update } from '@/routes/contact-company';
 
 const props = defineProps<{
-    errors: Record<string, string>;
+    // errors: Record<string, string>; // USAMOS desde el form. definido abajo
     contactGeneralId?: number;
     contactCompany?: {
         id: string;

@@ -20,29 +20,30 @@
         <layout>
             <ContactGeneral
                 v-if="!$page.props.step || $page.props.step == 1"
-                :errors="errors"
                 :contactGeneral="contactGeneral"
             />
+            <!-- <ContactGeneral
+                v-if="!$page.props.step || $page.props.step == 1"
+                :errors="errors"
+                :contactGeneral="contactGeneral"
+            /> -->
             <div v-if="contactGeneral">
                 <ContactCompany
                     :contactGeneralId="contactGeneral.id"
                     @back-step-event="backStep"
                     v-if="$page.props.step == 2"
-                    :errors="errors"
                     :contactCompany="contactGeneral.company"
                 />
                 <ContactPerson
                     :contactGeneralId="contactGeneral.id"
                     @back-step-event="backStep"
                     v-if="$page.props.step == 2.5"
-                    :errors="errors"
                     :contactPerson="contactGeneral.person"
                 />
                 <ContactDetail
                     :contactGeneralId="contactGeneral.id"
                     @back-step-event="backStep"
                     v-if="$page.props.step == 3"
-                    :errors="errors"
                     :contactDetail="contactGeneral.detail"
                 />
                 <div v-if="$page.props.step == 4" class="step-end">
@@ -64,7 +65,7 @@ import ContactGeneral from '@/pages/contact/general/Form.vue';
 import ContactPerson from '@/pages/contact/person/Form.vue';
 
 const props = defineProps<{
-    errors: object;
+    // errors: object;
     contactGeneral?: {
         // Objeto opcional
         id: string;

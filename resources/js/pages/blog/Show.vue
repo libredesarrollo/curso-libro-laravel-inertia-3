@@ -20,7 +20,7 @@ const props = withDefaults(
                 title: string;
             };
         };
-        errors?: Record<string, any>; // Marcado como opcional con ?
+        // errors?: Record<string, any>; // Marcado como opcional con ?
         contactGeneral?: {
             // Objeto opcional
             id: string;
@@ -31,7 +31,7 @@ const props = withDefaults(
     }>(), 
     {
         // Definimos el valor por defecto como un objeto vacío
-        errors: () => ({}) 
+        // errors: () => ({}) 
     }
 );
 
