@@ -78,7 +78,6 @@ const props = defineProps<{
 const page = usePage();
 
 function backStep(value: number) {
-    console.log(value);
 
     if (value == 2 && props.contactGeneral && props.contactGeneral.type) {
         // paso 2
