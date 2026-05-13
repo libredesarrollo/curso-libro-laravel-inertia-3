@@ -7,6 +7,7 @@ use App\Http\Controllers\Contact\PersonController;
 use App\Http\Controllers\Dashboard\CategoryController;
 use App\Http\Controllers\Dashboard\PostController;
 use App\Http\Controllers\Dashboard\TagController;
+use App\Http\Controllers\EventDemoController;
 use App\Http\Controllers\Teams\TeamInvitationController;
 use App\Http\Middleware\EnsureTeamMembership;
 use Illuminate\Support\Facades\Route;
@@ -84,5 +85,13 @@ Route::middleware(
 });
 
 
+
+// EVENT DEMO - Inertia Events
+Route::prefix('event-demo')->group(function () {
+    Route::get('/', [EventDemoController::class, 'index'])->name('event-demo.index');
+    Route::get('/slow', [EventDemoController::class, 'slow'])->name('event-demo.slow');
+    Route::get('/error', [EventDemoController::class, 'error'])->name('event-demo.error');
+    Route::post('/upload', [EventDemoController::class, 'upload'])->name('event-demo.upload');
+});
 
 require __DIR__.'/settings.php';
