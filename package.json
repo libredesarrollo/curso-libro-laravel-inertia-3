@@ -35,6 +35,7 @@
     },
     "dependencies": {
         "@ckeditor/ckeditor5-vue": "^7.4.0",
+        "@erag/lang-sync-inertia": "^1.6.1",
         "@inertiajs/vite": "^3.0.0",
         "@inertiajs/vue3": "^3.0.0",
         "@oruga-ui/oruga-next": "^0.13.2",
