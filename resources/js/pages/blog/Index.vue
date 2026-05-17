@@ -108,9 +108,9 @@ const { filters, applyFilters } = useFilters(index().url, {
             <!-- item -->
             <div class="flex flex-col items-center mt-5">
                 <div class="w-full sm:max-w-4xl overflow-hidden">
-                    <WhenVisible data="posts" :buffer="500">
+                    <!-- <WhenVisible data="posts" :buffer="500">
                         <template #fallback>
-                            <div>Loading...</div>
+                            <div>Loading WhenVisible...</div>
                         </template>
                         <div v-for="p in posts.data" class="p-3" :key="p">
                             <h4 class="text-center text-4xl mb-3">{{ p.title }}</h4>
@@ -137,37 +137,37 @@ const { filters, applyFilters } = useFilters(index().url, {
                             <hr class="my-16">
 
                         </div>
-                      </WhenVisible>
-                    <Deferred data="posts">
-                        <template #fallback>
-                            <div>Loading...</div>
-                        </template>
-                        <div v-for="p in posts.data" class="p-3" :key="p.id">
-                            <h4 class="text-center text-4xl mb-3">{{ p.title }}</h4>
-                            <p class="
-                                text-center text-sm text-gray-500
-                                italic
-                                font-bold
-                                uppercase
-                                tracking-widest
-                                ">
-                                {{ p.date }}
-                            </p>
+                      </WhenVisible> -->
+            <Deferred data="posts">
+                <template #fallback>
+                    <div>Loading Deferred...</div>
+                </template>
+                <div v-for="p in posts.data" class="p-3" :key="p.id">
+                    <h4 class="text-center text-4xl mb-3">{{ p.title }}</h4>
+                    <p class="
+                        text-center text-sm text-gray-500
+                        italic
+                        font-bold
+                        uppercase
+                        tracking-widest
+                        ">
+                        {{ p.date }}
+                    </p>
 
-                            <img class="w-full rounded-md shadow-md my-4"
-                                :src="p.image ? 'image/post/' + p.image : '/image/default.jpg'" alt="">
+                    <img class="w-full rounded-md shadow-md my-4"
+                        :src="p.image ? 'image/post/' + p.image : '/image/default.jpg'" alt="">
 
-                            <p class="mx-4">{{ p.description }}</p>
+                    <p class="mx-4">{{ p.description }}</p>
 
 
-                            <div class="flex flex-col items-center mt-7">
-                                <a class="btn-primary" :href="show(p.slug).url">Read more!</a>
-                            </div>
+                    <div class="flex flex-col items-center mt-7">
+                        <a class="btn-primary" :href="show(p.slug).url">Read more!</a>
+                    </div>
 
-                            <hr class="my-16">
+                    <hr class="my-16">
 
-                        </div>
-                      </Deferred>
+                </div>
+                </Deferred>
                 </div>
             </div>
 
