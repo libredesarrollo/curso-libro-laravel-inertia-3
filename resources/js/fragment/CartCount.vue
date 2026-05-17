@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed } from 'vue';
 import { usePage, Link } from '@inertiajs/vue3';
+import { computed } from 'vue';
 
 import { index } from '@/actions/App/Http/Controllers/Shop/CartController';
 

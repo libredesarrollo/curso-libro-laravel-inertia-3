@@ -1,7 +1,7 @@
 <script setup>
-import { ref } from 'vue';
-import { router } from '@inertiajs/vue3';
 import { vueLang } from '@erag/lang-sync-inertia';
+import { router } from '@inertiajs/vue3';
+import { ref } from 'vue';
 
 const { trans, __ } = vueLang();
 

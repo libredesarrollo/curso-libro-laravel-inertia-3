@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import { ShoppingCart } from 'lucide-vue-next';
 import Cart from '@/fragment/Cart.vue';
 import WebLayout from '@/layouts/WebLayout.vue';
-import { ShoppingCart } from 'lucide-vue-next';
 </script>
 
 <template>

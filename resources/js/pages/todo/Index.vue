@@ -1,15 +1,9 @@
 <script setup lang="ts">
-import { ref, watch, onMounted, nextTick } from 'vue';
 import { router, useForm } from '@inertiajs/vue3';
 import Sortable from 'sortablejs';
+import { ref, watch, onMounted, nextTick } from 'vue';
 
 // Layouts y Componentes UI
-import WebLayout from '@/layouts/WebLayout.vue';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import InputError from '@/components/InputError.vue';
-
-// Importaciones de Wayprint
 import {
     store,
     update as todoUpdate,
@@ -17,6 +11,11 @@ import {
     status as todoStatus,
     order as todoOrder,
 } from '@/actions/App/Http/Controllers/TodoController';
+import InputError from '@/components/InputError.vue';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+
+// Importaciones de Wayprint
 
 // Props
 const props = defineProps<{
@@ -33,6 +32,7 @@ const todoListRef = ref<HTMLElement | null>(null);
 
 // Custom notification
 import { useNotification } from '@/composables/useNotification';
+import WebLayout from '@/layouts/WebLayout.vue';
 
 const form = useForm({
     name: '',

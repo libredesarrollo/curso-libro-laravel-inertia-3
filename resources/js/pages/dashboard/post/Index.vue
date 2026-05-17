@@ -10,12 +10,14 @@ import {
     ArrowLeft,
 } from 'lucide-vue-next';
 import { watch } from 'vue';
+import { ref } from 'vue';
 import {
     create,
     edit,
     destroy,
     index,
 } from '@/actions/App/Http/Controllers/Dashboard/PostController';
+import ConfirmDeleteModal from '@/components/ConfirmDeleteModal.vue';
 import Heading from '@/components/Heading.vue';
 import { DataTable } from '@/components/shared/DataTable';
 import Pagination from '@/components/shared/Pagination.vue';
@@ -37,9 +39,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 
-import ConfirmDeleteModal from '@/components/ConfirmDeleteModal.vue';
 import { useFilters } from '@/composables/useFilters';
-import { ref } from 'vue';
 
 defineOptions({
     layout: {

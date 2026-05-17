@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useNotification } from '@/composables/useNotification';
 import { X } from 'lucide-vue-next';
+import { useNotification } from '@/composables/useNotification';
 
 const { notifications, remove } = useNotification();
 

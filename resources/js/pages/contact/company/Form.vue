@@ -39,6 +39,7 @@ function submit() {
         preserveScroll: true,
         preserveState: true,
     };
+
     if (!form.id) {
         form.post(store().url, options);
     } else {

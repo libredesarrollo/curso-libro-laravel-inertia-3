@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { Link } from "@inertiajs/vue3"
-import WebLayout from '@/layouts/WebLayout.vue';
-import Pagination from '@/components/shared/Pagination.vue';
-import { Button } from '@/components/ui/button';
-
 import {
     ArrowLeft,
 } from 'lucide-vue-next';
+import {
+    index,
+    show
+} from '@/actions/App/Http/Controllers/Blog/PostController';
+import Pagination from '@/components/shared/Pagination.vue';
+import { Button } from '@/components/ui/button';
+
 
 import {
     Select,
@@ -16,17 +19,20 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 
+import { WhenVisible } from "@inertiajs/vue3";
+import { Deferred } from "@inertiajs/vue3";
+
 // Importamos el composable reutilizable
 import { useFilters } from '@/composables/useFilters';
 
-import {
-    index,
-    show
-} from '@/actions/App/Http/Controllers/Blog/PostController';
+import WebLayout from '@/layouts/WebLayout.vue';
 
 // 1. Definición de Props (Equivale a props: {})
 const props = defineProps<{
-    posts: any;
+    // posts: any;
+    posts : {
+        data: any[];
+    };
     categories: any[];
     // Estos son los filtros iniciales que vienen de Laravel
     filters?: {
@@ -95,40 +101,79 @@ const { filters, applyFilters } = useFilters(index().url, {
                 </div>
             </div>
 
+            <div style="height:1000px">
+
+            </div>
+
             <!-- item -->
             <div class="flex flex-col items-center mt-5">
                 <div class="w-full sm:max-w-4xl overflow-hidden">
-                    <div v-for="p in posts.data" class="p-3" :key="p">
-                        <h4 class="text-center text-4xl mb-3">{{ p.title }}</h4>
-                        <p class="
-                              text-center text-sm text-gray-500
-                              italic
-                              font-bold
-                              uppercase
-                              tracking-widest
-                            ">
-                            {{ p.date }}
-                        </p>
+                    <WhenVisible data="posts" :buffer="500">
+                        <template #fallback>
+                            <div>Loading...</div>
+                        </template>
+                        <div v-for="p in posts.data" class="p-3" :key="p">
+                            <h4 class="text-center text-4xl mb-3">{{ p.title }}</h4>
+                            <p class="
+                                text-center text-sm text-gray-500
+                                italic
+                                font-bold
+                                uppercase
+                                tracking-widest
+                                ">
+                                {{ p.date }}
+                            </p>
 
-                        <img class="w-full rounded-md shadow-md my-4"
-                            :src="p.image ? 'image/post/' + p.image : '/image/default.jpg'" alt="">
+                            <img class="w-full rounded-md shadow-md my-4"
+                                :src="p.image ? 'image/post/' + p.image : '/image/default.jpg'" alt="">
 
-                        <p class="mx-4">{{ p.description }}</p>
+                            <p class="mx-4">{{ p.description }}</p>
 
 
-                        <div class="flex flex-col items-center mt-7">
-                            <a class="btn-primary" :href="show(p.slug).url">Read more!</a>
+                            <div class="flex flex-col items-center mt-7">
+                                <a class="btn-primary" :href="show(p.slug).url">Read more!</a>
+                            </div>
+
+                            <hr class="my-16">
+
                         </div>
+                      </WhenVisible>
+                    <Deferred data="posts">
+                        <template #fallback>
+                            <div>Loading...</div>
+                        </template>
+                        <div v-for="p in posts.data" class="p-3" :key="p.id">
+                            <h4 class="text-center text-4xl mb-3">{{ p.title }}</h4>
+                            <p class="
+                                text-center text-sm text-gray-500
+                                italic
+                                font-bold
+                                uppercase
+                                tracking-widest
+                                ">
+                                {{ p.date }}
+                            </p>
 
-                        <hr class="my-16">
+                            <img class="w-full rounded-md shadow-md my-4"
+                                :src="p.image ? 'image/post/' + p.image : '/image/default.jpg'" alt="">
 
-                    </div>
+                            <p class="mx-4">{{ p.description }}</p>
+
+
+                            <div class="flex flex-col items-center mt-7">
+                                <a class="btn-primary" :href="show(p.slug).url">Read more!</a>
+                            </div>
+
+                            <hr class="my-16">
+
+                        </div>
+                      </Deferred>
                 </div>
             </div>
 
             <!-- item -->
 
-            <Pagination v-if="posts.data.length > 0" :links="posts.links" />
+            <!-- <Pagination v-if="posts.data.length > 0" :links="posts.links" /> -->
         </section>
 
     </WebLayout>

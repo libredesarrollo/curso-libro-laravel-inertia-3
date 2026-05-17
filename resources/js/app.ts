@@ -12,9 +12,9 @@ import { initializeTheme } from '@/composables/useAppearance';
 
 import AppLayout from '@/layouts/AppLayout.vue';
 import AuthLayout from '@/layouts/AuthLayout.vue';
+import SettingsLayout from '@/layouts/settings/Layout.vue';
 import WebLayout from '@/layouts/WebLayout.vue';
 
-import SettingsLayout from '@/layouts/settings/Layout.vue';
 
 import '/node_modules/@oruga-ui/theme-oruga/dist/theme.css';
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import CartCount from '@/fragment/CartCount.vue';
 import ToastContainer from '@/components/ToastContainer.vue';
 import { useCurrentUrl } from '@/composables/useCurrentUrl';
+import CartCount from '@/fragment/CartCount.vue';
 
 </script>
 

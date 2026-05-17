@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import WebLayout from '@/layouts/WebLayout.vue';
-import GeneralStep from "@/pages/contact/general/Step.vue";
+import { usePage } from '@inertiajs/vue3';
 import Cart from "@/fragment/Cart.vue";
 import CartItem from '@/fragment/CartItem.vue';
+import WebLayout from '@/layouts/WebLayout.vue';
+import GeneralStep from "@/pages/contact/general/Step.vue";
 
-import { usePage } from '@inertiajs/vue3';
 
 // 1. Definición de props con tipos
 const props = withDefaults(

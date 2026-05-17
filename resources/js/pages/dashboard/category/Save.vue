@@ -22,6 +22,18 @@ defineProps<{
         slug?: string;
     };
 }>();
+
+import { usePoll } from '@inertiajs/vue3'
+
+// usePoll(2000, {
+//     onStart() {
+//             console.log('Polling request started')
+//     },
+//     onFinish() {
+//             console.log('Polling request finished')
+//     }
+// })
+
 </script>
 
 <template>
