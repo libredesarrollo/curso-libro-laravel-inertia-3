@@ -179,6 +179,7 @@ const deleteCategory = () => {
                                             <Link
                                                 :href="edit(row.id).url"
                                                 class="cursor-pointer"
+                                                prefetch
                                             >
                                                 <Pencil class="mr-2 h-4 w-4" />
                                                 Edit
