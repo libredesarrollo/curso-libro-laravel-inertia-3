@@ -3,9 +3,6 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
-
-use Illuminate\Http\Request;
-
 use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use Inertia\Inertia;
@@ -17,11 +14,11 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::filterDataTable(request()->only([ 'search', 'sortColumn', 'sortDirection']))
+        $categories = Category::filterDataTable(request()->only(['search', 'sortColumn', 'sortDirection']))
             ->paginate(15)
             ->withQueryString();
 
-        return inertia('dashboard/category/Index',compact('categories'));
+        return inertia('dashboard/category/Index', compact('categories'));
     }
 
     /**
@@ -29,9 +26,9 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        $category = new Category();
-        
-        return inertia('dashboard/category/Save',compact('category'));
+        $category = new Category;
+
+        return inertia('dashboard/category/Save', compact('category'));
     }
 
     /**
@@ -62,7 +59,7 @@ class CategoryController extends Controller
     public function edit(Category $category)
     {
         // return inertia('dashboard/category/Edit',['category' => $category']);
-        return inertia('dashboard/category/Save',compact('category'));
+        return inertia('dashboard/category/Save', compact('category'));
     }
 
     /**
@@ -84,6 +81,7 @@ class CategoryController extends Controller
     {
         $category->delete();
         Inertia::flash('message', 'Record deleted successfully.');
+
         return to_route('category.index');
     }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Contact;
 
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class GeneralRequest extends FormRequest
@@ -10,10 +9,11 @@ class GeneralRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      */
-   public function authorize(): bool
+    public function authorize(): bool
     {
         return true;
     }
+
     public function rules(): array
     {
         return [

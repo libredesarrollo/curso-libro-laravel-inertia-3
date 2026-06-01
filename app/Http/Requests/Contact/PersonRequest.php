@@ -1,6 +1,10 @@
 <?php
+
 namespace App\Http\Requests\Contact;
+
+use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
+
 class PersonRequest extends FormRequest
 {
     /**
@@ -10,10 +14,11 @@ class PersonRequest extends FormRequest
     {
         return true;
     }
+
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string>
+     * @return array<string, Rule|array|string>
      */
     public function rules(): array
     {

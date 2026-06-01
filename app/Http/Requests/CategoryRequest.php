@@ -7,12 +7,12 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class CategoryRequest extends FormRequest
 {
-
-    function prepareForValidation()
+    public function prepareForValidation()
     {
-        if(str($this->slug)->trim() == ''){
+        if (str($this->slug)->trim() == '') {
             $this->merge(['slug' => str($this->title)->slug()]);
         }
+
         return parent::prepareForValidation();
     }
 
@@ -32,8 +32,8 @@ class CategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "title" => 'required|min:3|max:255',
-            "slug" => 'required|min:3|max:255|unique:categories,slug,'.$this->route("category")?->id
+            'title' => 'required|min:3|max:255',
+            'slug' => 'required|min:3|max:255|unique:categories,slug,'.$this->route('category')?->id,
         ];
     }
 }

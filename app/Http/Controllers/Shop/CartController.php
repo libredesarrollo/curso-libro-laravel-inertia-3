@@ -5,12 +5,11 @@ namespace App\Http\Controllers\Shop;
 use App\Http\Controllers\Controller;
 use App\Models\Post;
 use App\Models\ShoppingCart;
-use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
 class CartController extends Controller
 {
-    function add(Post $post, int $count)
+    public function add(Post $post, int $count)
     {
         $cart = session('cart', []);
 
@@ -21,9 +20,9 @@ class CartController extends Controller
                 session(['cart' => $cart]);
                 $this->saveDB($cart);
             }
+
             return redirect()->back();
         }
-
 
         // add
         if (Arr::exists($cart, $post->id)) {
@@ -36,6 +35,7 @@ class CartController extends Controller
 
         session(['cart' => $cart]);
         $this->saveDB($cart);
+
         return redirect()->back();
     }
 
@@ -56,7 +56,7 @@ class CartController extends Controller
                             'post_id' => $c[0]['id'],
                             'count' => $c[1],
                             'user_id' => auth()->id(),
-                            'control' => $control
+                            'control' => $control,
                         ]
                     );
                 }
@@ -66,7 +66,7 @@ class CartController extends Controller
         }
     }
 
-    function index()
+    public function index()
     {
         return inertia('shop/Index');
     }

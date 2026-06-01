@@ -1,0 +1,59 @@
+<h2>Implementación del Modo Demo en Inertiastore</h2>
+
+<p>
+    Se implementó un sistema de modo demo que, cuando está activo, impide crear,
+    actualizar y eliminar registros del módulo Dashboard. Los usuarios pueden
+    seguir navegando y viendo los datos, pero cualquier acción de escritura es
+    bloqueada.
+</p>
+
+<h3>1. Archivo de configuración: <code>config/demo.php</code></h3>
+
+<p>
+    Se creó un archivo de configuración con una clave <code>enabled</code> que
+    por defecto es <code>true</code>. Esto permite controlar el modo demo desde
+    el archivo <code>.env</code> sin tocar código, usando la variable
+    <code>DEMO_MODE</code>.
+</p>
+
+<h3>2. Middleware: <code>app/Http/Middleware/DemoMode.php</code></h3>
+
+<p>
+    Se creó un middleware con un único método <code>handle()</code> que se
+    ejecuta en cada petición. Su lógica es simple: si el modo demo está
+    desactivado, deja pasar la petición sin intervenir. Si está activo, verifica
+    el método HTTP de la petición. Si el método es <code>POST</code>,
+    <code>PUT</code>, <code>PATCH</code> o <code>DELETE</code> (es decir,
+    cualquier método que modifique datos), bloquea la petición, muestra un
+    mensaje flash de Inertia indicando que la acción no está permitida en modo
+    demo, y redirige al usuario de vuelta a la página anterior. Las peticiones
+    <code>GET</code> no se ven afectadas.
+</p>
+
+<h3>3. Registro del middleware: <code>bootstrap/app.php</code></h3>
+
+<p>
+    Se registró el middleware con el alias <code>'demo'</code> usando el método
+    <code>$middleware->alias()</code>. Esto permite referenciarlo en las rutas
+    por su nombre corto.
+</p>
+
+<h3>4. Aplicación a rutas: <code>routes/web.php</code></h3>
+
+<p>
+    Se agregó el middleware <code>'demo'</code> al grupo de rutas del Dashboard,
+    que incluye los recursos <code>category</code>, <code>post</code> y
+    <code>tag</code>, más las rutas adicionales de subida y eliminación de
+    imágenes. Como el middleware se aplica a nivel de grupo, todas las rutas del
+    Dashboard heredan la protección automáticamente.
+</p>
+
+<h3>Resultado final</h3>
+
+<p>
+    El modo demo está activo por defecto. Cualquier intento de crear, editar o
+    eliminar un registro desde el Dashboard recibe un mensaje de error y la
+    acción es rechazada. Para desactivarlo, basta con agregar
+    <code>DEMO_MODE=false</code> en el archivo <code>.env</code> y no requiere
+    cambios adicionales en el código de los controladores.
+</p>

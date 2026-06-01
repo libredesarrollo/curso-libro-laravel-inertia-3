@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Http\Requests\Contact;
+
 use Illuminate\Foundation\Http\FormRequest;
 
 class CompanyRequest extends FormRequest
@@ -8,6 +10,7 @@ class CompanyRequest extends FormRequest
     {
         return true;
     }
+
     public function rules(): array
     {
         return [

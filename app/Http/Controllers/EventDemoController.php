@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-
 class EventDemoController extends Controller
 {
     /**
      * Muestra la página de demostración de eventos de Inertia.
-     * 
+     *
      * Esta página sirve como ejemplo educativo para entender el sistema
      * de eventos de Inertia.js en el lado del cliente.
      */
@@ -24,7 +22,7 @@ class EventDemoController extends Controller
     public function slow()
     {
         sleep(2);
-        
+
         return inertia('event-demo/Index', [
             'message' => '¡Página cargada después de 2 segundos de delay!',
             'loadedAt' => now()->toIso8601String(),
@@ -46,7 +44,7 @@ class EventDemoController extends Controller
     {
         // Simula procesamiento de archivo
         sleep(1);
-        
+
         return response()->json([
             'success' => true,
             'message' => 'Archivo procesado correctamente',

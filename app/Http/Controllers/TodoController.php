@@ -2,61 +2,64 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\Todo;
 use Illuminate\Http\Request;
-
 use Illuminate\Validation\ValidationException;
 
 class TodoController extends Controller
 {
-    function index()
+    public function index()
     {
         $todos = Todo::where('user_id', auth()->id())->orderBy('count')->get();
+
         return inertia('todo/Index', compact('todos'));
     }
-    function store(Request $request)
+
+    public function store(Request $request)
     {
 
         $data = $request->validate([
-            'name' => 'required|min:2|max:255'
+            'name' => 'required|min:2|max:255',
         ]);
 
         Todo::create([
             'name' => $data['name'],
             'user_id' => auth()->id(),
-            'count' => Todo::where('user_id', auth()->id())->count()
+            'count' => Todo::where('user_id', auth()->id())->count(),
         ]);
 
         // return back();
         return redirect(route('todo.index'));
     }
 
-    function update(Todo $todo, Request $request)
+    public function update(Todo $todo, Request $request)
     {
         $data = $request->validate([
-            'name' => 'required|min:2|max:255'
+            'name' => 'required|min:2|max:255',
         ]);
         Todo::where('id', $todo->id)->where('user_id', auth()->id())->update([
-            'name' => $data['name']
+            'name' => $data['name'],
         ]);
+
         // return back();
         return redirect(route('todo.index'));
     }
 
-    function destroy(?Todo $todo = null)
+    public function destroy(?Todo $todo = null)
     {
         if ($todo == null) {
-            Todo::where("user_id", auth()->id())->delete();
+            Todo::where('user_id', auth()->id())->delete();
         } else {
-            Todo::where("id", $todo->id)->where("user_id", auth()->id())->delete();
+            Todo::where('id', $todo->id)->where('user_id', auth()->id())->delete();
         }
+
         // return back();
         return redirect(route('todo.index'));
     }
-    function status(Todo $todo)
+
+    public function status(Todo $todo)
     {
-         sleep(2);
+        sleep(2);
         $randomError = rand(1, 10) <= 7;
         if ($randomError) {
             // abort(422, 'Random error occurred - optimistic update will rollback');
@@ -65,16 +68,17 @@ class TodoController extends Controller
             // ], 422);
             // // Esto envía el error de vuelta a Inertia correctamente
             throw ValidationException::withMessages([
-            'status' => 'Random error occurred - optimistic update will rollback',
-        ]);
+                'status' => 'Random error occurred - optimistic update will rollback',
+            ]);
         }
-        Todo::where("id", $todo->id)->where("user_id", auth()->id())->update([
-            'status' => request('status') == '1'
+        Todo::where('id', $todo->id)->where('user_id', auth()->id())->update([
+            'status' => request('status') == '1',
         ]);
+
         return redirect(route('todo.index'));
     }
 
-    function order()
+    public function order()
     {
         foreach (request('ids') as $count => $id) {
             Todo::where('user_id', auth()->id())->where('id', $id)

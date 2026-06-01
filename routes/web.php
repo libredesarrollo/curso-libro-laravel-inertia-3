@@ -31,7 +31,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('invitations/{invitation}/accept', [TeamInvitationController::class, 'accept'])->name('invitations.accept');
 
     // DASHBOARD
-    Route::group(['prefix' => 'dashboard'], function () {
+    Route::group(['prefix' => 'dashboard', 'middleware' => 'demo'], function () {
         Route::resource('category', CategoryController::class);
         Route::resource('post', PostController::class);
         Route::resource('tag', TagController::class);

@@ -13,12 +13,12 @@ class ShoppingCart extends Model
 
     // protected $fillable = ['user_id', 'post_id', 'count', 'control'];
 
-    function post()
+    public function post()
     {
         return $this->belongsTo(Post::class);
     }
 
-    function user()
+    public function user()
     {
         return $this->belongsTo(User::class);
     }

@@ -12,13 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('contact_companies', function (Blueprint $table) {
-             $table->id();
+            $table->id();
             $table->string('name', 255);
             $table->string('identification', 50);
             $table->string('email', 80);
             $table->string('extra', 255);
             $table->foreignId('contact_general_id')->onDelete('cascade');
-            $table->enum('choices', ['advert', 'post','course','movie','other']);
+            $table->enum('choices', ['advert', 'post', 'course', 'movie', 'other']);
             $table->timestamps();
         });
     }
