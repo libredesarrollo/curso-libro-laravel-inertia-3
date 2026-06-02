@@ -23,7 +23,7 @@ defineProps<{
     };
 }>();
 
-// import { usePoll } from '@inertiajs/vue3'
+import { usePoll } from '@inertiajs/vue3'
 
 // usePoll(2000, {
 //     onStart() {
@@ -34,34 +34,10 @@ defineProps<{
 //     }
 // })
 
-// import { useRemember } from "@inertiajs/vue3";
-
-// const form = useRemember(
-//   {
-//     first_name: null,
-//     last_name: null,
-//   },
-//   "Users/Create",
-// );
-
-// function submit() {
-//   console.log('send')
-// }
-
 </script>
 
 <template>
     <Head :title="category.id ? 'Edit Category' : 'Create Category'" />
-
-    <!-- <form @submit.prevent="submit"> 
-        <label>Nombre</label>
-        <input v-model="form.first_name" type="text" />
-
-        <label>Apellido</label>
-        <input v-model="form.last_name" type="text" />
-
-        <button type="submit">Guardar</button>
-    </form>-->
 
     <div class="mx-auto max-w-2xl space-y-6">
         <div class="flex items-center gap-4">
